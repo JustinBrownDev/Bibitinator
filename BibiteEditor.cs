@@ -22,7 +22,6 @@ namespace Bibitinator
         BibiteCollection bibCol = null;
         Node[] inNodes = null;
         Node[] outNodes = null;
-        public BibiteReflect.Root obj = null;
         public BibiteEditor(BibiteCollection col)
         {
             InitializeComponent();
@@ -43,11 +42,11 @@ namespace Bibitinator
                 dic.Add(desc);
                 node.Text = desc;
             }
+            bibCol.Root = JsonConvert.DeserializeObject<BibiteReflect.Root>(bibCol.json);
             buildTextboxes();
             Trace();
             splitContainer1.Cursor = Cursors.Arrow;
-            this.Text = bibCol.name;
-            obj = JsonConvert.DeserializeObject<BibiteReflect.Root>(bibCol.json);
+            this.Text = bibCol.name;     
         }
         public TreeNode createNode(BibiteCollection col)
         {
@@ -90,7 +89,8 @@ namespace Bibitinator
         }
         public void buildTextboxes()
         {
-            foreach(PropertyInfo prop in typeof(BibiteReflect.Genes1).GetProperties())
+            //BibiteReflect.Root obj = JsonConvert.DeserializeObject<BibiteReflect.Root>(bibCol.json);
+            foreach (PropertyInfo prop in typeof(BibiteReflect.Genes1).GetProperties())
             {
                 if (prop.PropertyType == typeof(double))
                 {
@@ -98,7 +98,7 @@ namespace Bibitinator
                     TextBox t = new TextBox();
                     l.Text = prop.Name;
                     l.Tag = "label";
-                    t.Text = prop.GetValue(obj.genes.genes).ToString();
+                    t.Text = prop.GetValue(bibCol.Root.genes.genes).ToString();
                     t.Tag = prop.Name;
                     Panel p = new Panel();
                     p.Width = l.Width + t.Width;
@@ -110,7 +110,7 @@ namespace Bibitinator
                     p.Parent = editorflow;
                 }
             }
-            List<Node> nodes = obj.brain.Nodes;
+            List<Node> nodes = bibCol.Root.brain.Nodes;
             foreach (Node node in nodes)
             {
                 if (node.Index <= 28)
@@ -129,7 +129,7 @@ namespace Bibitinator
             }
             inputComboBox.Text = "select";
             outputComboBox.Text = "select";
-            List<Synaps> synaps = obj.brain.Synapses;
+            List<Synaps> synaps = bibCol.Root.brain.Synapses;
             foreach (Synaps synap in synaps)
             {
                 FlowLayoutPanel p = new FlowLayoutPanel();
@@ -142,7 +142,7 @@ namespace Bibitinator
                 cbOut.ReadOnly = true;
                 nud.ReadOnly = true;
                 del.Text = "Remove";
-                del.Click += Check_CheckedChanged;
+                del.Click += synapseDelete;
                 cbIn.Text = synap.NodeIn < 43 ? nodes[synap.NodeIn].Desc : nodes[synap.NodeIn].Desc + " :" + nodes[synap.NodeIn].TypeName;
                 cbIn.Tag = nodes[synap.NodeIn].Index;
                 cbOut.Text = synap.NodeOut < 43 ? nodes[synap.NodeOut].Desc : nodes[synap.NodeOut].Desc + " :" + nodes[synap.NodeOut].TypeName;
@@ -157,20 +157,31 @@ namespace Bibitinator
                 cbIn.Width = 125;
                 cbOut.Width = 125;
                 p.Parent = BrainEditorPanel;
-                p.Tag = BrainEditorPanel.Controls.Count;
-                del.Tag = BrainEditorPanel.Controls.Count;
+                p.Tag = synaps.IndexOf(synap);
                 p.Dock = DockStyle.Top; 
                 p.Show();
             }
         }
 
-        private void Check_CheckedChanged(object sender, EventArgs e)
+        private void synapseDelete(object sender, EventArgs e)
         {
+            Panel parent = (Panel)((Button)sender).Parent;
+
+            int synIn = Convert.ToInt32(parent.Controls[0].Tag);
+            int synOut = Convert.ToInt32(parent.Controls[1].Tag);
+            decimal strength = Convert.ToDecimal(parent.Controls[2].Text);
+
+            var syn = bibCol.Root.brain.Synapses[Convert.ToInt32(parent.Tag)];
+            bibCol.Root.brain.Synapses.Remove(syn);
+            Trace();
             BrainEditorPanel.Controls.Remove(((Button)sender).Parent);
+           
         }
 
         private void Trace()
         {
+            //BibiteReflect.Root obj = JsonConvert.DeserializeObject<BibiteReflect.Root>(bibCol.json);
+            ConnectionsTreeView.Nodes.Clear();
             List<string> InputList = new List<string>();
             List<int> NoLoops = new List<int>();
             void Tracer(BibiteReflect.Node n, TreeNode inTreeNode)
@@ -185,12 +196,14 @@ namespace Bibitinator
                     //make list nodes with synapses going into current neuron
                     List<BibiteReflect.Node> inputNeurons = new List<BibiteReflect.Node>();
                     List<double> weight = new List<double>();
-                    foreach (BibiteReflect.Synaps s in obj.brain.Synapses)
+                    List<int> synDex = new List<int>();
+                    foreach (BibiteReflect.Synaps s in bibCol.Root.brain.Synapses)
                     {
                         if (s.NodeOut == n.Index)
                         {
-                            inputNeurons.Add(obj.brain.Nodes[s.NodeIn]);
+                            inputNeurons.Add(bibCol.Root.brain.Nodes[s.NodeIn]);
                             weight.Add(s.Weight);
+                            synDex.Add(bibCol.Root.brain.Synapses.IndexOf(s));
                         }
                     }
                     //find inputs, recurse
@@ -199,14 +212,15 @@ namespace Bibitinator
                         string nodetext;
                         if (inputNeurons[i].Desc.Contains("Hidden")) nodetext = inputNeurons[i].TypeName;
                         else nodetext = inputNeurons[i].Desc;
-                        var childNode = inTreeNode.Nodes[inTreeNode.Nodes.Add(new TreeNode((nodetext + ", strength: " + weight[i]).ToString()))];
+                        var childNode = inTreeNode.Nodes[inTreeNode.Nodes.Add(new TreeNode(Text = (nodetext + ", strength: " + weight[i]).ToString()))];
+                        childNode.Tag = synDex[i];
                         Tracer(inputNeurons[i], childNode);
                     }
 
                 }
             }
             //start with exit neurons
-            foreach (BibiteReflect.Node n in obj.brain.Nodes)
+            foreach (BibiteReflect.Node n in bibCol.Root.brain.Nodes)
             {
                 if (n.TypeName != "Input" && !n.Desc.Contains("Hidden"))
                 {
@@ -278,19 +292,21 @@ namespace Bibitinator
             editorflow.Controls.Clear();
             buildTextboxes();
         }
-        private void StrenghtUpDown_Changed(object sender, EventArgs e)
+        private void ConnectionsTreeView_AfterSelect(object sender, TreeViewEventArgs e)
         {
-        }
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-            CheckBox[] controls = (CheckBox[])BrainEditorPanel.Controls.Find("CheckBox", true);
-            List<Control> list = new List<Control>();
-            foreach (CheckBox control in controls)
+            if(MovingLabel.Text == "")
             {
-                if (control.Checked)
+                MovingLabel.Text = "Selected";
+            }
+            int syndex = Convert.ToInt32(ConnectionsTreeView.SelectedNode.Tag);
+            foreach(Control con in BrainEditorPanel.Controls)
+            {
+                if (Convert.ToInt32(con.Tag) == syndex)
                 {
-                    BrainEditorPanel.Controls.RemoveByKey(control.Tag.ToString());
+                    //MovingLabel.Parent.Controls.Remove(MovingLabel);
+                    con.Controls.Add(MovingLabel);
+                    BrainEditorPanel.ScrollControlIntoView(con);
+                    break;
                 }
             }
         }

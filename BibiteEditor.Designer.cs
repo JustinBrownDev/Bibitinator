@@ -32,14 +32,23 @@ namespace Bibitinator
             this.EditorTabControl = new System.Windows.Forms.TabControl();
             this.brainEditor = new System.Windows.Forms.TabPage();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.panel2 = new System.Windows.Forms.Panel();
             this.ConnectionsTreeView = new System.Windows.Forms.TreeView();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.BrainResetButton = new System.Windows.Forms.Button();
+            this.BrainSaveButton = new System.Windows.Forms.Button();
+            this.BrainSaveCopyButton = new System.Windows.Forms.Button();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
-            this.strengthUpDown = new System.Windows.Forms.NumericUpDown();
-            this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.outputComboBox = new System.Windows.Forms.ComboBox();
-            this.inputComboBox = new System.Windows.Forms.ComboBox();
+            this.panel3 = new System.Windows.Forms.Panel();
+            this.button2 = new System.Windows.Forms.Button();
             this.addSynapse = new System.Windows.Forms.Button();
+            this.button1 = new System.Windows.Forms.Button();
+            this.inputComboBox = new System.Windows.Forms.ComboBox();
+            this.outputComboBox = new System.Windows.Forms.ComboBox();
+            this.strengthUpDown = new System.Windows.Forms.NumericUpDown();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
+            this.MovingLabel = new System.Windows.Forms.Label();
             this.BrainEditorPanel = new System.Windows.Forms.Panel();
             this.Genes = new System.Windows.Forms.TabPage();
             this.GenesResetButton = new System.Windows.Forms.Button();
@@ -48,19 +57,19 @@ namespace Bibitinator
             this.splitter1 = new System.Windows.Forms.Splitter();
             this.Properties = new System.Windows.Forms.TabPage();
             this.propertiesTree = new System.Windows.Forms.TreeView();
-            this.BrainSaveCopyButton = new System.Windows.Forms.Button();
-            this.BrainSaveButton = new System.Windows.Forms.Button();
-            this.BrainResetButton = new System.Windows.Forms.Button();
             this.EditorTabControl.SuspendLayout();
             this.brainEditor.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
+            this.panel2.SuspendLayout();
+            this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
+            this.panel3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.strengthUpDown)).BeginInit();
             this.Genes.SuspendLayout();
             this.Properties.SuspendLayout();
@@ -97,7 +106,8 @@ namespace Bibitinator
             // 
             // splitContainer1.Panel1
             // 
-            this.splitContainer1.Panel1.Controls.Add(this.ConnectionsTreeView);
+            this.splitContainer1.Panel1.Controls.Add(this.panel2);
+            this.splitContainer1.Panel1.Controls.Add(this.panel1);
             this.splitContainer1.Panel1.Cursor = System.Windows.Forms.Cursors.Arrow;
             // 
             // splitContainer1.Panel2
@@ -108,13 +118,61 @@ namespace Bibitinator
             this.splitContainer1.SplitterDistance = 788;
             this.splitContainer1.TabIndex = 0;
             // 
+            // panel2
+            // 
+            this.panel2.Controls.Add(this.ConnectionsTreeView);
+            this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel2.Location = new System.Drawing.Point(0, 33);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(788, 643);
+            this.panel2.TabIndex = 3;
+            // 
             // ConnectionsTreeView
             // 
             this.ConnectionsTreeView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.ConnectionsTreeView.Location = new System.Drawing.Point(0, 0);
             this.ConnectionsTreeView.Name = "ConnectionsTreeView";
-            this.ConnectionsTreeView.Size = new System.Drawing.Size(788, 676);
+            this.ConnectionsTreeView.Size = new System.Drawing.Size(788, 643);
             this.ConnectionsTreeView.TabIndex = 1;
+            this.ConnectionsTreeView.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.ConnectionsTreeView_AfterSelect);
+            // 
+            // panel1
+            // 
+            this.panel1.Controls.Add(this.BrainResetButton);
+            this.panel1.Controls.Add(this.BrainSaveButton);
+            this.panel1.Controls.Add(this.BrainSaveCopyButton);
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel1.Location = new System.Drawing.Point(0, 0);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(788, 33);
+            this.panel1.TabIndex = 2;
+            // 
+            // BrainResetButton
+            // 
+            this.BrainResetButton.Location = new System.Drawing.Point(3, 3);
+            this.BrainResetButton.Name = "BrainResetButton";
+            this.BrainResetButton.Size = new System.Drawing.Size(52, 23);
+            this.BrainResetButton.TabIndex = 9;
+            this.BrainResetButton.Text = "Reset";
+            this.BrainResetButton.UseVisualStyleBackColor = true;
+            // 
+            // BrainSaveButton
+            // 
+            this.BrainSaveButton.Location = new System.Drawing.Point(61, 3);
+            this.BrainSaveButton.Name = "BrainSaveButton";
+            this.BrainSaveButton.Size = new System.Drawing.Size(58, 23);
+            this.BrainSaveButton.TabIndex = 8;
+            this.BrainSaveButton.Text = "Save";
+            this.BrainSaveButton.UseVisualStyleBackColor = true;
+            // 
+            // BrainSaveCopyButton
+            // 
+            this.BrainSaveCopyButton.Location = new System.Drawing.Point(125, 3);
+            this.BrainSaveCopyButton.Name = "BrainSaveCopyButton";
+            this.BrainSaveCopyButton.Size = new System.Drawing.Size(86, 23);
+            this.BrainSaveCopyButton.TabIndex = 7;
+            this.BrainSaveCopyButton.Text = "Save as Copy";
+            this.BrainSaveCopyButton.UseVisualStyleBackColor = true;
             // 
             // splitContainer2
             // 
@@ -126,15 +184,8 @@ namespace Bibitinator
             // 
             // splitContainer2.Panel1
             // 
-            this.splitContainer2.Panel1.Controls.Add(this.BrainResetButton);
-            this.splitContainer2.Panel1.Controls.Add(this.BrainSaveButton);
-            this.splitContainer2.Panel1.Controls.Add(this.BrainSaveCopyButton);
-            this.splitContainer2.Panel1.Controls.Add(this.strengthUpDown);
-            this.splitContainer2.Panel1.Controls.Add(this.label1);
-            this.splitContainer2.Panel1.Controls.Add(this.label2);
-            this.splitContainer2.Panel1.Controls.Add(this.outputComboBox);
-            this.splitContainer2.Panel1.Controls.Add(this.inputComboBox);
-            this.splitContainer2.Panel1.Controls.Add(this.addSynapse);
+            this.splitContainer2.Panel1.Controls.Add(this.panel3);
+            this.splitContainer2.Panel1.Controls.Add(this.MovingLabel);
             this.splitContainer2.Panel1.Cursor = System.Windows.Forms.Cursors.Arrow;
             // 
             // splitContainer2.Panel2
@@ -144,8 +195,67 @@ namespace Bibitinator
             this.splitContainer2.Panel2.Controls.Add(this.BrainEditorPanel);
             this.splitContainer2.Panel2.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.splitContainer2.Size = new System.Drawing.Size(589, 676);
-            this.splitContainer2.SplitterDistance = 64;
+            this.splitContainer2.SplitterDistance = 62;
             this.splitContainer2.TabIndex = 0;
+            // 
+            // panel3
+            // 
+            this.panel3.Controls.Add(this.button2);
+            this.panel3.Controls.Add(this.addSynapse);
+            this.panel3.Controls.Add(this.button1);
+            this.panel3.Controls.Add(this.inputComboBox);
+            this.panel3.Controls.Add(this.outputComboBox);
+            this.panel3.Controls.Add(this.strengthUpDown);
+            this.panel3.Controls.Add(this.label2);
+            this.panel3.Controls.Add(this.label1);
+            this.panel3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel3.Location = new System.Drawing.Point(0, 0);
+            this.panel3.Name = "panel3";
+            this.panel3.Size = new System.Drawing.Size(589, 62);
+            this.panel3.TabIndex = 2;
+            // 
+            // button2
+            // 
+            this.button2.Location = new System.Drawing.Point(259, 33);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(95, 23);
+            this.button2.TabIndex = 11;
+            this.button2.Text = "Create Neuron";
+            this.button2.UseVisualStyleBackColor = true;
+            // 
+            // addSynapse
+            // 
+            this.addSynapse.Location = new System.Drawing.Point(3, 3);
+            this.addSynapse.Name = "addSynapse";
+            this.addSynapse.Size = new System.Drawing.Size(75, 23);
+            this.addSynapse.TabIndex = 0;
+            this.addSynapse.Text = "Add";
+            this.addSynapse.UseVisualStyleBackColor = true;
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(84, 33);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(95, 23);
+            this.button1.TabIndex = 10;
+            this.button1.Text = "Create Neuron";
+            this.button1.UseVisualStyleBackColor = true;
+            // 
+            // inputComboBox
+            // 
+            this.inputComboBox.FormattingEnabled = true;
+            this.inputComboBox.Location = new System.Drawing.Point(84, 4);
+            this.inputComboBox.Name = "inputComboBox";
+            this.inputComboBox.Size = new System.Drawing.Size(144, 23);
+            this.inputComboBox.TabIndex = 1;
+            // 
+            // outputComboBox
+            // 
+            this.outputComboBox.FormattingEnabled = true;
+            this.outputComboBox.Location = new System.Drawing.Point(259, 4);
+            this.outputComboBox.Name = "outputComboBox";
+            this.outputComboBox.Size = new System.Drawing.Size(136, 23);
+            this.outputComboBox.TabIndex = 2;
             // 
             // strengthUpDown
             // 
@@ -168,57 +278,47 @@ namespace Bibitinator
             this.strengthUpDown.Name = "strengthUpDown";
             this.strengthUpDown.Size = new System.Drawing.Size(120, 23);
             this.strengthUpDown.TabIndex = 6;
-            this.strengthUpDown.ValueChanged += new System.EventHandler(this.StrenghtUpDown_Changed);
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(234, 8);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(19, 15);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "To";
+            this.strengthUpDown.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(401, 8);
+            this.label2.Location = new System.Drawing.Point(401, 7);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(52, 15);
             this.label2.TabIndex = 4;
             this.label2.Text = "Strength";
             // 
-            // outputComboBox
+            // label1
             // 
-            this.outputComboBox.FormattingEnabled = true;
-            this.outputComboBox.Location = new System.Drawing.Point(259, 5);
-            this.outputComboBox.Name = "outputComboBox";
-            this.outputComboBox.Size = new System.Drawing.Size(136, 23);
-            this.outputComboBox.TabIndex = 2;
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(234, 7);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(19, 15);
+            this.label1.TabIndex = 0;
+            this.label1.Text = "To";
             // 
-            // inputComboBox
+            // MovingLabel
             // 
-            this.inputComboBox.FormattingEnabled = true;
-            this.inputComboBox.Location = new System.Drawing.Point(84, 5);
-            this.inputComboBox.Name = "inputComboBox";
-            this.inputComboBox.Size = new System.Drawing.Size(144, 23);
-            this.inputComboBox.TabIndex = 1;
-            // 
-            // addSynapse
-            // 
-            this.addSynapse.Location = new System.Drawing.Point(3, 4);
-            this.addSynapse.Name = "addSynapse";
-            this.addSynapse.Size = new System.Drawing.Size(75, 23);
-            this.addSynapse.TabIndex = 0;
-            this.addSynapse.Text = "Add";
-            this.addSynapse.UseVisualStyleBackColor = true;
+            this.MovingLabel.AutoSize = true;
+            this.MovingLabel.Location = new System.Drawing.Point(3, 42);
+            this.MovingLabel.Name = "MovingLabel";
+            this.MovingLabel.Padding = new System.Windows.Forms.Padding(0, 7, 0, 0);
+            this.MovingLabel.Size = new System.Drawing.Size(0, 22);
+            this.MovingLabel.TabIndex = 0;
             // 
             // BrainEditorPanel
             // 
+            this.BrainEditorPanel.AutoScroll = true;
+            this.BrainEditorPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.BrainEditorPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.BrainEditorPanel.Location = new System.Drawing.Point(0, 0);
             this.BrainEditorPanel.Name = "BrainEditorPanel";
-            this.BrainEditorPanel.Size = new System.Drawing.Size(589, 608);
+            this.BrainEditorPanel.Size = new System.Drawing.Size(589, 610);
             this.BrainEditorPanel.TabIndex = 0;
             // 
             // Genes
@@ -291,33 +391,6 @@ namespace Bibitinator
             this.propertiesTree.Size = new System.Drawing.Size(1375, 670);
             this.propertiesTree.TabIndex = 0;
             // 
-            // BrainSaveCopyButton
-            // 
-            this.BrainSaveCopyButton.Location = new System.Drawing.Point(465, 38);
-            this.BrainSaveCopyButton.Name = "BrainSaveCopyButton";
-            this.BrainSaveCopyButton.Size = new System.Drawing.Size(86, 23);
-            this.BrainSaveCopyButton.TabIndex = 7;
-            this.BrainSaveCopyButton.Text = "Save as Copy";
-            this.BrainSaveCopyButton.UseVisualStyleBackColor = true;
-            // 
-            // BrainSaveButton
-            // 
-            this.BrainSaveButton.Location = new System.Drawing.Point(401, 38);
-            this.BrainSaveButton.Name = "BrainSaveButton";
-            this.BrainSaveButton.Size = new System.Drawing.Size(58, 23);
-            this.BrainSaveButton.TabIndex = 8;
-            this.BrainSaveButton.Text = "Save";
-            this.BrainSaveButton.UseVisualStyleBackColor = true;
-            // 
-            // BrainResetButton
-            // 
-            this.BrainResetButton.Location = new System.Drawing.Point(343, 38);
-            this.BrainResetButton.Name = "BrainResetButton";
-            this.BrainResetButton.Size = new System.Drawing.Size(52, 23);
-            this.BrainResetButton.TabIndex = 9;
-            this.BrainResetButton.Text = "Reset";
-            this.BrainResetButton.UseVisualStyleBackColor = true;
-            // 
             // BibiteEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -333,11 +406,15 @@ namespace Bibitinator
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
+            this.panel2.ResumeLayout(false);
+            this.panel1.ResumeLayout(false);
             this.splitContainer2.Panel1.ResumeLayout(false);
             this.splitContainer2.Panel1.PerformLayout();
             this.splitContainer2.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
             this.splitContainer2.ResumeLayout(false);
+            this.panel3.ResumeLayout(false);
+            this.panel3.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.strengthUpDown)).EndInit();
             this.Genes.ResumeLayout(false);
             this.Properties.ResumeLayout(false);
@@ -372,5 +449,11 @@ namespace Bibitinator
         private System.Windows.Forms.Button BrainResetButton;
         private System.Windows.Forms.Button BrainSaveButton;
         private System.Windows.Forms.Button BrainSaveCopyButton;
+        private System.Windows.Forms.Label MovingLabel;
+        private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Panel panel3;
     }
 }
