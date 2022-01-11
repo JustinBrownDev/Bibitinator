@@ -143,17 +143,22 @@ namespace Bibitinator
 
         private void exportButton_Click(object sender, EventArgs e)
         {
-            int lastSlashIndex = openWorldZipDialog.FileName.LastIndexOf('\\');
-            string zipName = openWorldZipDialog.FileName.Substring(lastSlashIndex, openWorldZipDialog.FileName.LastIndexOf('.') - lastSlashIndex);
-            string targetFileName = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + 
-            "\\AppData\\LocalLow\\The Bibites\\The Bibites\\Bibitinator\\" + zipName + ".zip";
+            if(bibiteListView.Items.Count > 0)
+            {
+                int lastSlashIndex = openWorldZipDialog.FileName.LastIndexOf('\\');
+                string zipName = openWorldZipDialog.FileName.Substring(lastSlashIndex);
+                string targetFileName = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) +
+                "\\AppData\\LocalLow\\The Bibites\\The Bibites\\Bibitinator\\";
+                if (!Directory.Exists(targetFileName))
+                {
+                    Directory.CreateDirectory(targetFileName);
+                }
+                FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog();
+                folderBrowserDialog.SelectedPath = targetFileName;
+                folderBrowserDialog.ShowDialog();
 
-            FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog();
-            folderBrowserDialog.SelectedPath = targetFileName;
-            folderBrowserDialog.ShowDialog();
-
-            zipInOrder(folderBrowserDialog.SelectedPath);
-
+                zipInOrder(folderBrowserDialog.SelectedPath, zipName);
+            }       
         }
         private void populateSettings()
         {
@@ -233,7 +238,7 @@ namespace Bibitinator
             json = Regex.Replace(json, @"\s", "");
             return json;
         }
-        private void zipInOrder(string targetFileName)
+        private void zipInOrder(string targetFileName, string zipname)
         {
             int lastSlashIndex = openWorldZipDialog.FileName.LastIndexOf('\\');
             
@@ -246,22 +251,43 @@ namespace Bibitinator
             File.Copy(extractTo + "\\scene" + sceneExtension, extractTo + "\\temp\\bscene" + sceneExtension);
             Directory.Move(extractTo + "\\bibites", extractTo + "\\temp\\cbibites");
             Directory.Move(extractTo + "\\eggs", extractTo + "\\temp\\deggs");
-
+            if (File.Exists(targetFileName + zipname))
+            {
+                zipname = zipname.Insert(zipname.IndexOf('.'), Guid.NewGuid().ToString().Substring(24));
+            }
+            
             //create zip file
-            ZipFile.CreateFromDirectory(extractTo + "\\temp", targetFileName);
-
+            ZipFile.CreateFromDirectory(extractTo + "\\temp", targetFileName + zipname);
+            if(!Directory.Exists(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\bibites"))
+            {
+                Directory.CreateDirectory(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\bibites");
+                File.Create(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\bibites\\strange Behavior.txt");
+            }            
             //rename files back to correct names within the directory 
             ProcessStartInfo p = new ProcessStartInfo();
             p.FileName = "C:\\Users\\justi\\source\\repos\\Bibitinator\\7z.exe";
-            p.Arguments = "rn \"" + targetFileName + "\" asettings" + settingsExtension + " settings" + settingsExtension + " bscene" + sceneExtension + " scene" + sceneExtension + " cbibites\\ bibites\\ deggs\\ eggs\\";
+            p.Arguments = "a \"" + targetFileName + zipname + "\" \"" + Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\cbibites\\";
             p.WindowStyle = ProcessWindowStyle.Hidden;
             Process x = Process.Start(p);
+            x.WaitForExit();
+
+            p.FileName = "C:\\Users\\justi\\source\\repos\\Bibitinator\\7z.exe";
+            p.Arguments = "d \"" + targetFileName + zipname + "\" \"" + "cbibites\\strange Behavior.txt";
+            p.WindowStyle = ProcessWindowStyle.Hidden;
+            Process y = Process.Start(p);
+            //
+            y.WaitForExit();
+            p.FileName = "C:\\Users\\justi\\source\\repos\\Bibitinator\\7z.exe";
+            p.Arguments = "rn \"" + targetFileName + zipname + "\" asettings" + settingsExtension + " settings" + settingsExtension + " bscene" + sceneExtension + " scene" + sceneExtension + " cbibites\\ bibites\\ deggs\\ eggs\\";
+            p.WindowStyle = ProcessWindowStyle.Hidden;
+            Process z = Process.Start(p);
 
             //return the bibites & eggs folders back & delete the temp folder 
-            x.WaitForExit();
+            z.WaitForExit();
             Directory.Move(extractTo + "\\temp\\cbibites", extractTo + "\\bibites");
             Directory.Move(extractTo + "\\temp\\deggs", extractTo + "\\eggs");
             Directory.Delete(extractTo + "\\temp\\", true);
+            MessageBox.Show("Save Completed");
         }
         private void WorldResetButton_Click(object sender, EventArgs e)
         {

@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -13,6 +14,7 @@ using Bibitinator.Models;
 using Bibitinator.Models.BibiteTracer;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Newtonsoft.Json.Serialization;
 using static Bibitinator.Models.BibiteReflect;
 
 namespace Bibitinator
@@ -132,37 +134,44 @@ namespace Bibitinator
             List<Synaps> synaps = bibCol.Root.brain.Synapses;
             foreach (Synaps synap in synaps)
             {
-                FlowLayoutPanel p = new FlowLayoutPanel();
-                p.Anchor = AnchorStyles.Top;
-                TextBox cbIn = new TextBox();
-                TextBox cbOut = new TextBox();
-                TextBox nud = new TextBox();
-                Button del = new Button();
-                cbIn.ReadOnly = true;
-                cbOut.ReadOnly = true;
-                nud.ReadOnly = true;
-                del.Text = "Remove";
-                del.Click += synapseDelete;
-                cbIn.Text = synap.NodeIn < 43 ? nodes[synap.NodeIn].Desc : nodes[synap.NodeIn].Desc + " :" + nodes[synap.NodeIn].TypeName;
-                cbIn.Tag = nodes[synap.NodeIn].Index;
-                cbOut.Text = synap.NodeOut < 43 ? nodes[synap.NodeOut].Desc : nodes[synap.NodeOut].Desc + " :" + nodes[synap.NodeOut].TypeName;
-                cbOut.Tag = nodes[synap.NodeOut].Index;
-                nud.Text = synap.Weight.ToString();
-                p.Cursor = Cursors.Arrow;
-                p.Controls.Add(cbIn);
-                p.Controls.Add(cbOut);
-                p.Controls.Add(nud);
-                p.Controls.Add(del);
-                p.Height = cbIn.Height + 10;
-                cbIn.Width = 125;
-                cbOut.Width = 125;
-                p.Parent = BrainEditorPanel;
-                p.Tag = synaps.IndexOf(synap);
-                p.Dock = DockStyle.Top; 
-                p.Show();
+                AddSynapsePanel(synap);
             }
         }
-
+        private void AddSynapsePanel(BibiteReflect.Synaps synap)
+        {
+            List<Node> relatedNodes = new List<Node>();
+            relatedNodes.Add(bibCol.Root.brain.Nodes[synap.NodeIn]);
+            relatedNodes.Add(bibCol.Root.brain.Nodes[synap.NodeOut]);
+            FlowLayoutPanel p = new FlowLayoutPanel();
+            p.Anchor = AnchorStyles.Top;
+            TextBox cbIn = new TextBox();
+            TextBox cbOut = new TextBox();
+            TextBox nud = new TextBox();
+            Button del = new Button();
+            cbIn.ReadOnly = true;
+            cbOut.ReadOnly = true;
+            nud.ReadOnly = true;
+            nud.Tag = synap;
+            del.Text = "Remove";
+            del.Click += synapseDelete;
+            cbIn.Text = synap.NodeIn < 43 ? bibCol.Root.brain.Nodes[synap.NodeIn].Desc : bibCol.Root.brain.Nodes[synap.NodeIn].Desc + " :" + bibCol.Root.brain.Nodes[synap.NodeIn].TypeName;
+            cbIn.Tag = bibCol.Root.brain.Nodes[synap.NodeIn].Index;
+            cbOut.Text = synap.NodeOut < 43 ? bibCol.Root.brain.Nodes[synap.NodeOut].Desc : bibCol.Root.brain.Nodes[synap.NodeOut].Desc + " :" + bibCol.Root.brain.Nodes[synap.NodeOut].TypeName;
+            cbOut.Tag = bibCol.Root.brain.Nodes[synap.NodeOut].Index;
+            nud.Text = synap.Weight.ToString();
+            p.Cursor = Cursors.Arrow;
+            p.Controls.Add(cbIn);
+            p.Controls.Add(cbOut);
+            p.Controls.Add(nud);
+            p.Controls.Add(del);
+            p.Height = cbIn.Height + 10;
+            cbIn.Width = 125;
+            cbOut.Width = 125;
+            p.Tag = relatedNodes;
+            p.Parent = BrainEditorPanel;
+            p.Dock = DockStyle.Top;
+            p.Show();
+        }
         private void synapseDelete(object sender, EventArgs e)
         {
             Panel parent = (Panel)((Button)sender).Parent;
@@ -171,11 +180,10 @@ namespace Bibitinator
             int synOut = Convert.ToInt32(parent.Controls[1].Tag);
             decimal strength = Convert.ToDecimal(parent.Controls[2].Text);
 
-            var syn = bibCol.Root.brain.Synapses[Convert.ToInt32(parent.Tag)];
+            var syn = bibCol.Root.brain.Synapses[Convert.ToInt32(BrainEditorPanel.Controls.IndexOf(parent))];
             bibCol.Root.brain.Synapses.Remove(syn);
             Trace();
             BrainEditorPanel.Controls.Remove(((Button)sender).Parent);
-           
         }
 
         private void Trace()
@@ -196,14 +204,13 @@ namespace Bibitinator
                     //make list nodes with synapses going into current neuron
                     List<BibiteReflect.Node> inputNeurons = new List<BibiteReflect.Node>();
                     List<double> weight = new List<double>();
-                    List<int> synDex = new List<int>();
+                    
                     foreach (BibiteReflect.Synaps s in bibCol.Root.brain.Synapses)
                     {
                         if (s.NodeOut == n.Index)
                         {
                             inputNeurons.Add(bibCol.Root.brain.Nodes[s.NodeIn]);
                             weight.Add(s.Weight);
-                            synDex.Add(bibCol.Root.brain.Synapses.IndexOf(s));
                         }
                     }
                     //find inputs, recurse
@@ -213,7 +220,7 @@ namespace Bibitinator
                         if (inputNeurons[i].Desc.Contains("Hidden")) nodetext = inputNeurons[i].TypeName;
                         else nodetext = inputNeurons[i].Desc;
                         var childNode = inTreeNode.Nodes[inTreeNode.Nodes.Add(new TreeNode(Text = (nodetext + ", strength: " + weight[i]).ToString()))];
-                        childNode.Tag = synDex[i];
+                        childNode.Tag = bibCol.Root.brain.Synapses.Find(x => x.NodeOut == n.Index && x.NodeIn == inputNeurons[i].Index);
                         Tracer(inputNeurons[i], childNode);
                     }
 
@@ -294,14 +301,13 @@ namespace Bibitinator
         }
         private void ConnectionsTreeView_AfterSelect(object sender, TreeViewEventArgs e)
         {
-            if(MovingLabel.Text == "")
+            if (MovingLabel.Text == "")
             {
                 MovingLabel.Text = "Selected";
             }
-            int syndex = Convert.ToInt32(ConnectionsTreeView.SelectedNode.Tag);
-            foreach(Control con in BrainEditorPanel.Controls)
+            foreach (Control con in BrainEditorPanel.Controls)
             {
-                if (Convert.ToInt32(con.Tag) == syndex)
+                if (con.Controls[2].Tag == ConnectionsTreeView.SelectedNode.Tag)
                 {
                     //MovingLabel.Parent.Controls.Remove(MovingLabel);
                     con.Controls.Add(MovingLabel);
@@ -310,5 +316,179 @@ namespace Bibitinator
                 }
             }
         }
+
+        private void AddOutNeuronButton_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void AddInNeuronButton_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void addSynapse_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void BrainResetButton_Click(object sender, EventArgs e)
+        {
+
+        }
+        private void BrainSaveButton_Click(object sender, EventArgs e)
+        {
+            applyBrainChangesToModel();
+            serializeModelData(bibCol.name);
+        }
+        private void BrainSaveCopyButton_Click(object sender, EventArgs e)
+        {
+            applyBrainChangesToModel();
+            List<string> names = Directory.EnumerateFiles(bibCol.extractFolder + "\\bibites").ToList();
+            string name = "bibite_" + names.Count() + bibCol.name.Substring(bibCol.name.IndexOf('.'));
+            int i = names.Count() + 1;
+            while (File.Exists(bibCol.extractFolder + "\\bibites\\" + name))
+            {
+                name = "bibite_" + i + bibCol.name.Substring(bibCol.name.IndexOf('.'));
+            }
+            serializeModelData(name);
+        }
+        public class IgnorePropertiesResolver : DefaultContractResolver
+        {
+            //used to specify which properties to not include when serializing json files
+            //allows the files to be saved with the correct properties for both versions, using the same model
+            private readonly HashSet<string> ignoreProps;
+            public IgnorePropertiesResolver(IEnumerable<string> propNamesToIgnore)
+            {
+                this.ignoreProps = new HashSet<string>(propNamesToIgnore);
+            }
+
+            protected override JsonProperty CreateProperty(MemberInfo member, MemberSerialization memberSerialization)
+            {
+                JsonProperty property = base.CreateProperty(member, memberSerialization);
+                if (this.ignoreProps.Contains(property.PropertyName))
+                {
+                    property.ShouldSerialize = _ => false;
+                }
+                return property;
+            }
+        }
+        private void applyBrainChangesToModel()
+        {
+            List<Synaps> synapses = new List<Synaps>();
+            NeuralNetEditorNodes nodes = new NeuralNetEditorNodes();
+            Node[] inputNodes;
+            Node[] outputNodes;
+            if (bibCol.name.Contains(".bb8"))
+            {
+                inputNodes = nodes.inputNodesNew;
+                outputNodes = nodes.outputNodesNew;
+            }
+            else
+            {
+                inputNodes = nodes.inputNodesOld;
+                outputNodes = nodes.outputNodesOld;
+            }
+            List<Node> nodesResult = new List<Node>();
+            //static nodes are the input and output neurons that are always present regardless of wether they have synapses going to them
+            List<Node> staticNodes = new List<Node>();
+            staticNodes.AddRange(inputNodes);
+            staticNodes.AddRange(outputNodes);
+
+            int staticNodeCount = staticNodes.Count;
+            foreach (Control con in BrainEditorPanel.Controls)
+            {
+                //the nodes associated with each synapse are stored as a tag when generating the panels
+                List<Node> relatedNodes = (List<Node>)con.Tag;
+                Synaps s = new Synaps();
+                s.NodeIn = Convert.ToInt32(con.Controls[0].Tag);
+                s.NodeOut = Convert.ToInt32(con.Controls[1].Tag);
+                s.Weight = Convert.ToDouble(con.Controls[2].Text);
+                s.Inov = 0;
+                s.En = true;
+                synapses.Add(s);
+                relatedNodes[0].NOut = 0;
+                relatedNodes[1].NOut = 0;
+                relatedNodes[0].NIn = 0;
+                relatedNodes[1].NIn = 0;
+                if (nodesResult.Find(x => x.Index == relatedNodes[0].Index) == null)
+                {
+                    nodesResult.Add(relatedNodes[0]);
+                }
+                if (nodesResult.Find(x => x.Index == relatedNodes[1].Index) == null)
+                {
+                    nodesResult.Add(relatedNodes[1]);
+                }
+            }
+            bool complete = false;
+            //trim the synapses for only those that serve a function, this doesnt work entirely but its enough for the game to load
+            while (!complete)
+            {
+                int count = synapses.Count;
+                foreach (Synaps s in synapses)
+                {
+                    if (s.NodeIn >= staticNodeCount && synapses.FindAll(x => x.NodeOut == s.NodeIn) == null) synapses.Remove(s);
+                    else if (s.NodeOut >= staticNodeCount && synapses.FindAll(x => x.NodeIn == s.NodeOut) == null) synapses.Remove(s);
+                }
+                if (synapses.Count == count) complete = true;
+            }
+            List<Node> validatedNodes = new List<Node>();
+            nodesResult.OrderBy(x => x.Index);
+            //create a list of nodes that are associated with the trimmed list of synapses
+            foreach (Synaps s in synapses)
+            {
+                if (validatedNodes.Find(x => x.Index == s.NodeIn) == null) validatedNodes.Add(nodesResult.Find(x => x.Index == s.NodeIn));
+                if (validatedNodes.Find(x => x.Index == s.NodeOut) == null) validatedNodes.Add(nodesResult.Find(x => x.Index == s.NodeOut));
+            }
+            validatedNodes.OrderBy(x => x.Index).ToList();
+            //add any missing static nodes
+            for (int i = 0; i < staticNodeCount; i++)
+            {
+                if (validatedNodes.Find(x => x.Index == i) == null)
+                {
+                    validatedNodes.Add(staticNodes[i]);
+                }
+            }
+            validatedNodes = validatedNodes.OrderBy(x => x.Index).ToList();
+            //first assign the Nodein and Nodeout synapse properties to the List index of their associated node, then assign the index property of the nodes to their list index
+            //this ensures theres no gaps in the indecies of the nodes from deleted nodes
+            //fix the HiddenX numbers of middle neurons so they are in order
+            foreach (Synaps s in synapses)
+            {
+                s.NodeIn = validatedNodes.IndexOf(validatedNodes.Find(x => x.Index == s.NodeIn));
+                s.NodeOut = validatedNodes.IndexOf(validatedNodes.Find(x => x.Index == s.NodeOut));
+            }
+            validatedNodes.ForEach(x => x.Index = validatedNodes.IndexOf(x));
+            validatedNodes.FindAll(x => x.Desc.Contains("Hidden")).ForEach(x => x.Desc = "Hidden" + (x.Index - staticNodeCount).ToString());
+            //assign validated data to the root model
+            bibCol.Root.brain.Nodes = validatedNodes;
+            bibCol.Root.brain.Synapses = synapses;
+        }
+        void serializeModelData(string name)
+        {
+            //begin serializing the data to a json file
+            //the version selection is janky, needs to use the version property in settings.json, currently theres only two versions supported and it differentiates via the file type
+            string json = null;
+            if (bibCol.name.Contains(".bb8"))
+            {
+                json = JsonConvert.SerializeObject(bibCol.Root, new JsonSerializerSettings()
+                { ContractResolver = new IgnorePropertiesResolver(new[] { "NIn", "NOut", "maxHealth", "MaxEnergy", "d1Size", "isWow" }) });
+            }
+            else if (bibCol.name.Contains(".json"))
+            {
+                json = JsonConvert.SerializeObject(bibCol.Root, new JsonSerializerSettings()
+                { ContractResolver = new IgnorePropertiesResolver(new[] { "Fullness", "Phero1Heading", "Phero2Heading", "Phero3Heading", "GrowthScale", "GrowthMaturityFactor", "GrowthMaturityExponent", "biteProgress", "stomach" }) });
+            }
+            if (File.Exists(bibCol.extractFolder + "\\bibites\\" + name))
+            {
+                File.Delete(bibCol.extractFolder + "\\bibites\\" + name);
+            }
+            File.WriteAllText(bibCol.extractFolder + "\\bibites\\" + name, json);
+            if (File.Exists(bibCol.extractFolder + "\\bibites\\" + name))
+            {
+                MessageBox.Show("Saved Sucessfully");
+            }
+        }
+
     }
 }
