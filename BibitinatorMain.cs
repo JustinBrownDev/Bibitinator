@@ -222,12 +222,11 @@ namespace Bibitinator
             {
                 foreach (Control o in c.Controls)
                 {
-                    if (!o.Tag.Equals("label") && json.Contains(o.Tag.ToString()))
+                    if (!o.Tag.Equals("label"))
                     {
                         TextBox box = (TextBox)o;
                         string value = box.Text;
                         if (value.Equals("NaN")) value = "NaN\"";
-                        else value = value.ToLower();
                         int propIndex = json.IndexOf('"' + box.Tag.ToString() + '"') + box.Tag.ToString().Length + 2;
                         int valIndex = json.IndexOfAny(nums, propIndex);
                         int stopRemoving = json.IndexOfAny(stops, valIndex) - valIndex;
