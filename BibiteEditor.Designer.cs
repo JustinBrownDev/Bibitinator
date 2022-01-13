@@ -40,9 +40,8 @@ namespace Bibitinator
             this.BrainSaveCopyButton = new System.Windows.Forms.Button();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.panel3 = new System.Windows.Forms.Panel();
-            this.AddOutNeuronButton = new System.Windows.Forms.Button();
             this.addSynapse = new System.Windows.Forms.Button();
-            this.AddInNeuronButton = new System.Windows.Forms.Button();
+            this.AddNeuronButton = new System.Windows.Forms.Button();
             this.inputComboBox = new System.Windows.Forms.ComboBox();
             this.outputComboBox = new System.Windows.Forms.ComboBox();
             this.strengthUpDown = new System.Windows.Forms.NumericUpDown();
@@ -57,6 +56,7 @@ namespace Bibitinator
             this.splitter1 = new System.Windows.Forms.Splitter();
             this.Properties = new System.Windows.Forms.TabPage();
             this.propertiesTree = new System.Windows.Forms.TreeView();
+            this.AddNeuronComboBox = new System.Windows.Forms.ComboBox();
             this.EditorTabControl.SuspendLayout();
             this.brainEditor.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -203,9 +203,9 @@ namespace Bibitinator
             // 
             // panel3
             // 
-            this.panel3.Controls.Add(this.AddOutNeuronButton);
+            this.panel3.Controls.Add(this.AddNeuronComboBox);
             this.panel3.Controls.Add(this.addSynapse);
-            this.panel3.Controls.Add(this.AddInNeuronButton);
+            this.panel3.Controls.Add(this.AddNeuronButton);
             this.panel3.Controls.Add(this.inputComboBox);
             this.panel3.Controls.Add(this.outputComboBox);
             this.panel3.Controls.Add(this.strengthUpDown);
@@ -217,40 +217,30 @@ namespace Bibitinator
             this.panel3.Size = new System.Drawing.Size(589, 62);
             this.panel3.TabIndex = 2;
             // 
-            // AddOutNeuronButton
-            // 
-            this.AddOutNeuronButton.Location = new System.Drawing.Point(259, 33);
-            this.AddOutNeuronButton.Name = "AddOutNeuronButton";
-            this.AddOutNeuronButton.Size = new System.Drawing.Size(95, 23);
-            this.AddOutNeuronButton.TabIndex = 11;
-            this.AddOutNeuronButton.Text = "Create Neuron";
-            this.AddOutNeuronButton.UseVisualStyleBackColor = true;
-            this.AddOutNeuronButton.Click += new System.EventHandler(this.AddOutNeuronButton_Click);
-            // 
             // addSynapse
             // 
             this.addSynapse.Location = new System.Drawing.Point(3, 3);
             this.addSynapse.Name = "addSynapse";
-            this.addSynapse.Size = new System.Drawing.Size(75, 23);
+            this.addSynapse.Size = new System.Drawing.Size(117, 23);
             this.addSynapse.TabIndex = 0;
-            this.addSynapse.Text = "Add";
+            this.addSynapse.Text = "Add Synapse";
             this.addSynapse.UseVisualStyleBackColor = true;
             this.addSynapse.Click += new System.EventHandler(this.addSynapse_Click);
             // 
-            // AddInNeuronButton
+            // AddNeuronButton
             // 
-            this.AddInNeuronButton.Location = new System.Drawing.Point(84, 33);
-            this.AddInNeuronButton.Name = "AddInNeuronButton";
-            this.AddInNeuronButton.Size = new System.Drawing.Size(95, 23);
-            this.AddInNeuronButton.TabIndex = 10;
-            this.AddInNeuronButton.Text = "Create Neuron";
-            this.AddInNeuronButton.UseVisualStyleBackColor = true;
-            this.AddInNeuronButton.Click += new System.EventHandler(this.AddInNeuronButton_Click);
+            this.AddNeuronButton.Location = new System.Drawing.Point(3, 32);
+            this.AddNeuronButton.Name = "AddNeuronButton";
+            this.AddNeuronButton.Size = new System.Drawing.Size(117, 23);
+            this.AddNeuronButton.TabIndex = 10;
+            this.AddNeuronButton.Text = "Add Neuron";
+            this.AddNeuronButton.UseVisualStyleBackColor = true;
+            this.AddNeuronButton.Click += new System.EventHandler(this.AddNeuronButton_Click);
             // 
             // inputComboBox
             // 
             this.inputComboBox.FormattingEnabled = true;
-            this.inputComboBox.Location = new System.Drawing.Point(84, 4);
+            this.inputComboBox.Location = new System.Drawing.Point(126, 5);
             this.inputComboBox.Name = "inputComboBox";
             this.inputComboBox.Size = new System.Drawing.Size(144, 23);
             this.inputComboBox.TabIndex = 1;
@@ -258,7 +248,7 @@ namespace Bibitinator
             // outputComboBox
             // 
             this.outputComboBox.FormattingEnabled = true;
-            this.outputComboBox.Location = new System.Drawing.Point(259, 4);
+            this.outputComboBox.Location = new System.Drawing.Point(301, 5);
             this.outputComboBox.Name = "outputComboBox";
             this.outputComboBox.Size = new System.Drawing.Size(136, 23);
             this.outputComboBox.TabIndex = 2;
@@ -270,7 +260,7 @@ namespace Bibitinator
             0,
             0,
             65536});
-            this.strengthUpDown.Location = new System.Drawing.Point(459, 4);
+            this.strengthUpDown.Location = new System.Drawing.Point(501, 4);
             this.strengthUpDown.Maximum = new decimal(new int[] {
             25,
             0,
@@ -282,7 +272,7 @@ namespace Bibitinator
             0,
             -2147418112});
             this.strengthUpDown.Name = "strengthUpDown";
-            this.strengthUpDown.Size = new System.Drawing.Size(120, 23);
+            this.strengthUpDown.Size = new System.Drawing.Size(78, 23);
             this.strengthUpDown.TabIndex = 6;
             this.strengthUpDown.Value = new decimal(new int[] {
             1,
@@ -293,7 +283,7 @@ namespace Bibitinator
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(401, 7);
+            this.label2.Location = new System.Drawing.Point(443, 8);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(52, 15);
             this.label2.TabIndex = 4;
@@ -302,7 +292,7 @@ namespace Bibitinator
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(234, 7);
+            this.label1.Location = new System.Drawing.Point(276, 6);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(19, 15);
             this.label1.TabIndex = 0;
@@ -397,6 +387,14 @@ namespace Bibitinator
             this.propertiesTree.Size = new System.Drawing.Size(1375, 670);
             this.propertiesTree.TabIndex = 0;
             // 
+            // AddNeuronComboBox
+            // 
+            this.AddNeuronComboBox.FormattingEnabled = true;
+            this.AddNeuronComboBox.Location = new System.Drawing.Point(126, 33);
+            this.AddNeuronComboBox.Name = "AddNeuronComboBox";
+            this.AddNeuronComboBox.Size = new System.Drawing.Size(144, 23);
+            this.AddNeuronComboBox.TabIndex = 11;
+            // 
             // BibiteEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -436,8 +434,6 @@ namespace Bibitinator
         private System.Windows.Forms.TreeView propertiesTree;
         private System.Windows.Forms.FlowLayoutPanel editorflow;
         private System.Windows.Forms.Splitter splitter1;
-        private System.Windows.Forms.TabPage tabPage1;
-        private System.Windows.Forms.TabPage tabPage3;
         private System.Windows.Forms.Button saveButton;
         private System.Windows.Forms.TabPage brainEditor;
         private System.Windows.Forms.Button GenesResetButton;
@@ -448,7 +444,6 @@ namespace Bibitinator
         private System.Windows.Forms.ComboBox outputComboBox;
         private System.Windows.Forms.ComboBox inputComboBox;
         private System.Windows.Forms.Button addSynapse;
-        private System.Windows.Forms.TrackBar strengthTrackBar;
         private System.Windows.Forms.NumericUpDown strengthUpDown;
         private System.Windows.Forms.TreeView ConnectionsTreeView;
         private System.Windows.Forms.Panel BrainEditorPanel;
@@ -458,8 +453,8 @@ namespace Bibitinator
         private System.Windows.Forms.Label MovingLabel;
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Button AddOutNeuronButton;
-        private System.Windows.Forms.Button AddInNeuronButton;
+        private System.Windows.Forms.Button AddNeuronButton;
         private System.Windows.Forms.Panel panel3;
+        private System.Windows.Forms.ComboBox AddNeuronComboBox;
     }
 }

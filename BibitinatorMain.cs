@@ -222,11 +222,12 @@ namespace Bibitinator
             {
                 foreach (Control o in c.Controls)
                 {
-                    if (!o.Tag.Equals("label"))
+                    if (!o.Tag.Equals("label") && json.Contains(o.Tag.ToString()))
                     {
                         TextBox box = (TextBox)o;
                         string value = box.Text;
                         if (value.Equals("NaN")) value = "NaN\"";
+                        else value = value.ToLower();
                         int propIndex = json.IndexOf('"' + box.Tag.ToString() + '"') + box.Tag.ToString().Length + 2;
                         int valIndex = json.IndexOfAny(nums, propIndex);
                         int stopRemoving = json.IndexOfAny(stops, valIndex) - valIndex;
@@ -265,19 +266,19 @@ namespace Bibitinator
             }            
             //rename files back to correct names within the directory 
             ProcessStartInfo p = new ProcessStartInfo();
-            p.FileName = "C:\\Users\\justi\\source\\repos\\Bibitinator\\7z.exe";
+            p.FileName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\7z.exe";
             p.Arguments = "a \"" + targetFileName + zipname + "\" \"" + Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\cbibites\\";
             p.WindowStyle = ProcessWindowStyle.Hidden;
             Process x = Process.Start(p);
             x.WaitForExit();
 
-            p.FileName = "C:\\Users\\justi\\source\\repos\\Bibitinator\\7z.exe";
+            p.FileName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\7z.exe";
             p.Arguments = "d \"" + targetFileName + zipname + "\" \"" + "cbibites\\strange Behavior.txt";
             p.WindowStyle = ProcessWindowStyle.Hidden;
             Process y = Process.Start(p);
             //
             y.WaitForExit();
-            p.FileName = "C:\\Users\\justi\\source\\repos\\Bibitinator\\7z.exe";
+            p.FileName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\7z.exe";
             p.Arguments = "rn \"" + targetFileName + zipname + "\" asettings" + settingsExtension + " settings" + settingsExtension + " bscene" + sceneExtension + " scene" + sceneExtension + " cbibites\\ bibites\\ deggs\\ eggs\\";
             p.WindowStyle = ProcessWindowStyle.Hidden;
             Process z = Process.Start(p);
