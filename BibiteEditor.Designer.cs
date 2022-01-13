@@ -480,8 +480,5 @@ namespace Bibitinator
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Button AddNeuronButton;
         private System.Windows.Forms.Panel panel3;
-        private System.Windows.Forms.Button NodeEditorButton;
-        private System.Windows.Forms.ComboBox AddNeuronComboBox;
-        private System.Windows.Forms.Label label3;
     }
 }
