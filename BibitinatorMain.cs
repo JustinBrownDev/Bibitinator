@@ -301,9 +301,9 @@ namespace Bibitinator
             bibiteListView.Items.Clear();
             string userFilepath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\Documents";
             OpenFileDialog fileDialog = new OpenFileDialog();
-            if (Directory.Exists(userFilepath)) openWorldZipDialog.InitialDirectory = userFilepath;
+            if (Directory.Exists(userFilepath)) fileDialog.InitialDirectory = userFilepath;
             fileDialog.ShowDialog();
-            bibiteBrowseTextBox.Text = openWorldZipDialog.FileName;
+            bibiteBrowseTextBox.Text = fileDialog.FileName;
             if (bibiteBrowseTextBox.Text != null && File.Exists(fileDialog.FileName))
             {
                 if (fileDialog.FileName.EndsWith(".json"))
