@@ -45,8 +45,8 @@ namespace Bibitinator
 
             if (Directory.Exists(userFilepath)) openWorldZipDialog.InitialDirectory = userFilepath;
             openWorldZipDialog.ShowDialog();
-            filePathTextBox.Text = openWorldZipDialog.FileName;
-            if (filePathTextBox.Text != null && File.Exists(openWorldZipDialog.FileName) && openWorldZipDialog.FileName.EndsWith(".zip"))
+            worldFilePathTextBox.Text = openWorldZipDialog.FileName;
+            if (worldFilePathTextBox.Text != null && File.Exists(openWorldZipDialog.FileName) && openWorldZipDialog.FileName.EndsWith(".zip"))
             {
                 //extract the zip file
                 Cursor.Current = Cursors.WaitCursor;
@@ -72,7 +72,7 @@ namespace Bibitinator
                 }
                 else
                 {
-                    filePathTextBox.Text = "error";
+                    worldFilePathTextBox.Text = "error";
                 }
                 //populate listview
                 string[] bibiteList = Directory.GetFiles(extractTo + "\\bibites");
@@ -91,7 +91,7 @@ namespace Bibitinator
             }
             else
             {
-                filePathTextBox.Text = "invalid";
+                worldFilePathTextBox.Text = "invalid";
             }
             
         }
@@ -102,8 +102,8 @@ namespace Bibitinator
             {
                 BibiteCollection col = new BibiteCollection();
                 col.name = bibiteListView.SelectedItems[0].Text ;
-                col.extractFolder = extractTo;
-                string filePath = extractTo + "\\bibites\\" +col.name;
+                col.extractFolder = extractTo + "\\bibites\\";
+                string filePath = extractTo + "\\bibites\\" + col.name;
                 string result = string.Empty;
                 JObject jobj = new JObject();
                 try
@@ -294,6 +294,57 @@ namespace Bibitinator
         {
             worldSettingsFlow.Controls.Clear();
             populateSettings();
+        }
+
+        private void bibiteBrowseButton_Click(object sender, EventArgs e)
+        {
+            bibiteListView.Items.Clear();
+            string userFilepath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\Documents";
+            OpenFileDialog fileDialog = new OpenFileDialog();
+            if (Directory.Exists(userFilepath)) openWorldZipDialog.InitialDirectory = userFilepath;
+            fileDialog.ShowDialog();
+            bibiteBrowseTextBox.Text = openWorldZipDialog.FileName;
+            if (bibiteBrowseTextBox.Text != null && File.Exists(fileDialog.FileName))
+            {
+                if (fileDialog.FileName.EndsWith(".json"))
+                {
+                    bibiteExtension = ".json";
+                }
+                else if (fileDialog.FileName.EndsWith(".bb8"))
+                {
+                    bibiteExtension = ".bb8";
+                }
+                else
+                {
+                    worldFilePathTextBox.Text = "error";
+                }
+                try
+                {
+                    BibiteCollection col = new BibiteCollection();
+                    string result = string.Empty;
+                    JObject jobj = new JObject();
+                    using (StreamReader r = new StreamReader(fileDialog.FileName))
+                    {
+                        var json = r.ReadToEnd();
+                        jobj = JObject.Parse(json);
+                        result = jobj.ToString(Newtonsoft.Json.Formatting.Indented);
+                    }
+                    col.json = result;
+                    int nameStart = fileDialog.FileName.LastIndexOf("\\") + 1;
+                    col.name = fileDialog.FileName.Substring(nameStart);
+                    col.extractFolder = fileDialog.FileName.Substring(0, fileDialog.FileName.Length - col.name.Length);
+                    BibiteEditor editorWindow = new BibiteEditor(col);
+                    editorWindow.Show();
+                }
+                catch
+                {
+
+                }
+            }
+            else
+            {
+                worldFilePathTextBox.Text = "invalid";
+            }
         }
     }
 }
