@@ -250,9 +250,9 @@ namespace Bibitinator
         {
             char[] nums = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-', 'N', 'f', 't' };
             char[] stops = { ',', '}', ']' };
-            if (File.Exists(bibCol.extractFolder + "\\bibites\\" + bibCol.name))
+            if (File.Exists(bibCol.extractFolder + bibCol.name))
             {
-                File.Delete(bibCol.extractFolder + "\\bibites\\" + bibCol.name);
+                File.Delete(bibCol.extractFolder + bibCol.name);
             }
             foreach (Panel p in editorflow.Controls)
             {
@@ -280,9 +280,9 @@ namespace Bibitinator
         {
             Cursor = Cursors.WaitCursor;
             string json = ReplaceValuesInBibite(bibCol.json);
-            File.WriteAllText(bibCol.extractFolder + "\\bibites\\" + bibCol.name, json);
+            File.WriteAllText(bibCol.extractFolder + bibCol.name, json);
 
-            if (File.Exists(bibCol.extractFolder + "\\bibites\\" + bibCol.name))
+            if (File.Exists(bibCol.extractFolder + bibCol.name))
             {
                 MessageBox.Show("Success!");
             }
@@ -343,10 +343,10 @@ namespace Bibitinator
         private void BrainSaveCopyButton_Click(object sender, EventArgs e)
         {
             applyBrainChangesToModel();
-            List<string> names = Directory.EnumerateFiles(bibCol.extractFolder + "\\bibites").ToList();
+            List<string> names = Directory.EnumerateFiles(bibCol.extractFolder).ToList();
             string name = "bibite_" + names.Count() + bibCol.name.Substring(bibCol.name.IndexOf('.'));
             int i = names.Count() + 1;
-            while (File.Exists(bibCol.extractFolder + "\\bibites\\" + name))
+            while (File.Exists(bibCol.extractFolder + name))
             {
                 name = "bibite_" + i + bibCol.name.Substring(bibCol.name.IndexOf('.'));
             }
@@ -478,12 +478,12 @@ namespace Bibitinator
                 json = JsonConvert.SerializeObject(bibCol.Root, new JsonSerializerSettings()
                 { ContractResolver = new IgnorePropertiesResolver(new[] { "Fullness", "Phero1Heading", "Phero2Heading", "Phero3Heading", "GrowthScale", "GrowthMaturityFactor", "GrowthMaturityExponent", "biteProgress", "stomach" }) });
             }
-            if (File.Exists(bibCol.extractFolder + "\\bibites\\" + name))
+            if (File.Exists(bibCol.extractFolder + name))
             {
-                File.Delete(bibCol.extractFolder + "\\bibites\\" + name);
+                File.Delete(bibCol.extractFolder + name);
             }
-            File.WriteAllText(bibCol.extractFolder + "\\bibites\\" + name, json);
-            if (File.Exists(bibCol.extractFolder + "\\bibites\\" + name))
+            File.WriteAllText(bibCol.extractFolder + name, json);
+            if (File.Exists(bibCol.extractFolder + name))
             {
                 MessageBox.Show("Saved Sucessfully");
             }
