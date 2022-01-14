@@ -263,6 +263,7 @@ namespace Bibitinator
             // 
             // strengthUpDown
             // 
+            this.strengthUpDown.DecimalPlaces = 2;
             this.strengthUpDown.Increment = new decimal(new int[] {
             1,
             0,
@@ -270,12 +271,12 @@ namespace Bibitinator
             65536});
             this.strengthUpDown.Location = new System.Drawing.Point(501, 4);
             this.strengthUpDown.Maximum = new decimal(new int[] {
-            4,
+            10,
             0,
             0,
             0});
             this.strengthUpDown.Minimum = new decimal(new int[] {
-            4,
+            10,
             0,
             0,
             -2147483648});
