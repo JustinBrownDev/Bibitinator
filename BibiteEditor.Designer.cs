@@ -40,6 +40,7 @@ namespace Bibitinator
             this.BrainSaveCopyButton = new System.Windows.Forms.Button();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.panel3 = new System.Windows.Forms.Panel();
+            this.AddNeuronComboBox = new System.Windows.Forms.ComboBox();
             this.addSynapse = new System.Windows.Forms.Button();
             this.AddNeuronButton = new System.Windows.Forms.Button();
             this.inputComboBox = new System.Windows.Forms.ComboBox();
@@ -56,7 +57,6 @@ namespace Bibitinator
             this.splitter1 = new System.Windows.Forms.Splitter();
             this.Properties = new System.Windows.Forms.TabPage();
             this.propertiesTree = new System.Windows.Forms.TreeView();
-            this.AddNeuronComboBox = new System.Windows.Forms.ComboBox();
             this.EditorTabControl.SuspendLayout();
             this.brainEditor.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -217,6 +217,14 @@ namespace Bibitinator
             this.panel3.Size = new System.Drawing.Size(589, 62);
             this.panel3.TabIndex = 2;
             // 
+            // AddNeuronComboBox
+            // 
+            this.AddNeuronComboBox.FormattingEnabled = true;
+            this.AddNeuronComboBox.Location = new System.Drawing.Point(126, 33);
+            this.AddNeuronComboBox.Name = "AddNeuronComboBox";
+            this.AddNeuronComboBox.Size = new System.Drawing.Size(144, 23);
+            this.AddNeuronComboBox.TabIndex = 11;
+            // 
             // addSynapse
             // 
             this.addSynapse.Location = new System.Drawing.Point(3, 3);
@@ -262,15 +270,15 @@ namespace Bibitinator
             65536});
             this.strengthUpDown.Location = new System.Drawing.Point(501, 4);
             this.strengthUpDown.Maximum = new decimal(new int[] {
-            25,
+            4,
             0,
             0,
-            65536});
+            0});
             this.strengthUpDown.Minimum = new decimal(new int[] {
-            25,
+            4,
             0,
             0,
-            -2147418112});
+            -2147483648});
             this.strengthUpDown.Name = "strengthUpDown";
             this.strengthUpDown.Size = new System.Drawing.Size(78, 23);
             this.strengthUpDown.TabIndex = 6;
@@ -386,14 +394,6 @@ namespace Bibitinator
             this.propertiesTree.Name = "propertiesTree";
             this.propertiesTree.Size = new System.Drawing.Size(1375, 670);
             this.propertiesTree.TabIndex = 0;
-            // 
-            // AddNeuronComboBox
-            // 
-            this.AddNeuronComboBox.FormattingEnabled = true;
-            this.AddNeuronComboBox.Location = new System.Drawing.Point(126, 33);
-            this.AddNeuronComboBox.Name = "AddNeuronComboBox";
-            this.AddNeuronComboBox.Size = new System.Drawing.Size(144, 23);
-            this.AddNeuronComboBox.TabIndex = 11;
             // 
             // BibiteEditor
             // 
