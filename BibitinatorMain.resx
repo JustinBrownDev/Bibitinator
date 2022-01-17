@@ -57,6 +57,29 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="textBox1.Text" xml:space="preserve">
+    <value>Instructions:
+Edit a world file:
+upload the world file zip using the browse button,
+to the bibites in that file either double click them or
+select the bibite you want to edit and click the
+Analyze button.
+Always make sure to save your changes, then export
+the world file, or else your changes will be lost
+
+Edit Indivividual bibites:
+upload the bibite file using the browse button,
+the bibite editor will open automatically.
+You need only press save in the bibite editor to save
+your changes.
+
+Tips:
+when editing a bibite's neural net, select items within 
+treeview in the lefthand panel, a 'Selected' 
+label will appear next to the synapse in the right hand panel.
+
+</value>
+  </data>
   <metadata name="backgroundWorker1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>386, 17</value>
   </metadata>

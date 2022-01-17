@@ -114,18 +114,18 @@ namespace Bibitinator
             }
             foreach (Node node in nodes)
             {
-                if (node.Index <= 28)
+                if (node.TypeName == "Input")
                 {
                     inputComboBox.Items.Add(node.Desc + " :Input");
                 }
-                else if (node.Index <= 43)
-                {
-                    outputComboBox.Items.Add(node.Desc + " :Output");
-                }
-                else
+                else if (node.Desc.Contains("Hidden"))
                 {
                     inputComboBox.Items.Add(node.Desc + " :" + node.TypeName);
                     outputComboBox.Items.Add(node.Desc + " :" + node.TypeName);
+                }
+                else
+                {
+                    outputComboBox.Items.Add(node.Desc + " :Output");       
                 }
             }
             inputComboBox.Text = "select";
@@ -246,7 +246,7 @@ namespace Bibitinator
                 }
             }
         }
-        private string ReplaceValuesInBibite(string json)
+        private string ReplaceValuesInBibiteSettings(string json)
         {
             char[] nums = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-', 'N', 'f', 't' };
             char[] stops = { ',', '}', ']' };
@@ -260,6 +260,7 @@ namespace Bibitinator
                 {
                     if (!c.Tag.Equals("label"))
                     {
+                        
                         TextBox box = (TextBox)c;
                         string value = box.Text;
                         if (value.Equals("NaN")) value = "NaN\"";
@@ -279,7 +280,8 @@ namespace Bibitinator
         private void saveButton_Click(object sender, EventArgs e)
         {
             Cursor = Cursors.WaitCursor;
-            string json = ReplaceValuesInBibite(bibCol.json);
+            string json = ReplaceValuesInBibiteSettings(bibCol.json);
+            bibCol.json = json;
             File.WriteAllText(bibCol.extractFolder + bibCol.name, json);
 
             if (File.Exists(bibCol.extractFolder + bibCol.name))
@@ -469,8 +471,8 @@ namespace Bibitinator
         void serializeModelData(string name)
         {
             //begin serializing the data to a json file
-            //the version selection is janky, needs to use the version property in settings.json, currently theres only two versions supported and it differentiates via the file type
-            string json = null;
+            //the version selection is janky, needs to use the version property in settings.json, currently theres only two versions supported and it differentiates via the file typ
+            string json = string.Empty;
             if (bibCol.name.Contains(".bb8"))
             {
                 json = JsonConvert.SerializeObject(bibCol.Root, new JsonSerializerSettings()
@@ -481,6 +483,19 @@ namespace Bibitinator
                 json = JsonConvert.SerializeObject(bibCol.Root, new JsonSerializerSettings()
                 { ContractResolver = new IgnorePropertiesResolver(new[] { "Fullness", "Phero1Heading", "Phero2Heading", "Phero3Heading", "GrowthScale", "GrowthMaturityFactor", "GrowthMaturityExponent", "biteProgress", "stomach" }) });
             }
+            if (bibCol.json.Contains("version"))
+            {
+                int versionLength = bibCol.json.LastIndexOf('"') - (bibCol.json.IndexOf("version") - 1);
+                string version = bibCol.json.Substring(bibCol.json.IndexOf("version") - 1, versionLength + 1);
+                json = json.Insert(json.LastIndexOf('}'),"," + version);
+            }
+            int positionLocation = bibCol.json.IndexOf("position") - 1;
+            int positionLength = bibCol.json.IndexOf(']',positionLocation) - positionLocation;
+            string position = bibCol.json.Substring(positionLocation,positionLength + 1);
+            position = Regex.Replace(position, @"\s", "");
+            json = json.Replace("\"_position\":null", position);
+            json = ReplaceValuesInBibiteSettings(json);
+            bibCol.json = json;
             if (File.Exists(bibCol.extractFolder + name))
             {
                 File.Delete(bibCol.extractFolder + name);

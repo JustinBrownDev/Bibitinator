@@ -28,11 +28,15 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Bibitinator));
             this.AnalyzeButton = new System.Windows.Forms.Button();
             this.worldBrowseButton = new System.Windows.Forms.Button();
             this.worldFilePathTextBox = new System.Windows.Forms.TextBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage0 = new System.Windows.Forms.TabPage();
+            this.label2 = new System.Windows.Forms.Label();
+            this.bibiteBrowseButton = new System.Windows.Forms.Button();
+            this.bibiteBrowseTextBox = new System.Windows.Forms.TextBox();
             this.exportButton = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.bibiteListView = new System.Windows.Forms.ListView();
@@ -45,9 +49,7 @@
             this.backgroundWorker2 = new System.ComponentModel.BackgroundWorker();
             this.openWorldZipDialog = new System.Windows.Forms.OpenFileDialog();
             this.backgroundWorker3 = new System.ComponentModel.BackgroundWorker();
-            this.bibiteBrowseTextBox = new System.Windows.Forms.TextBox();
-            this.bibiteBrowseButton = new System.Windows.Forms.Button();
-            this.label2 = new System.Windows.Forms.Label();
+            this.textBox1 = new System.Windows.Forms.TextBox();
             this.tabControl1.SuspendLayout();
             this.tabPage0.SuspendLayout();
             this.tabPage5.SuspendLayout();
@@ -98,6 +100,7 @@
             // 
             // tabPage0
             // 
+            this.tabPage0.Controls.Add(this.textBox1);
             this.tabPage0.Controls.Add(this.label2);
             this.tabPage0.Controls.Add(this.bibiteBrowseButton);
             this.tabPage0.Controls.Add(this.bibiteBrowseTextBox);
@@ -114,6 +117,33 @@
             this.tabPage0.TabIndex = 5;
             this.tabPage0.Text = "File";
             this.tabPage0.UseVisualStyleBackColor = true;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(9, 62);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(78, 15);
+            this.label2.TabIndex = 13;
+            this.label2.Text = "Upload Bibite";
+            // 
+            // bibiteBrowseButton
+            // 
+            this.bibiteBrowseButton.Location = new System.Drawing.Point(212, 83);
+            this.bibiteBrowseButton.Name = "bibiteBrowseButton";
+            this.bibiteBrowseButton.Size = new System.Drawing.Size(56, 25);
+            this.bibiteBrowseButton.TabIndex = 12;
+            this.bibiteBrowseButton.Text = "browse";
+            this.bibiteBrowseButton.UseVisualStyleBackColor = true;
+            this.bibiteBrowseButton.Click += new System.EventHandler(this.bibiteBrowseButton_Click);
+            // 
+            // bibiteBrowseTextBox
+            // 
+            this.bibiteBrowseTextBox.Location = new System.Drawing.Point(6, 85);
+            this.bibiteBrowseTextBox.Name = "bibiteBrowseTextBox";
+            this.bibiteBrowseTextBox.ReadOnly = true;
+            this.bibiteBrowseTextBox.Size = new System.Drawing.Size(255, 23);
+            this.bibiteBrowseTextBox.TabIndex = 11;
             // 
             // exportButton
             // 
@@ -215,32 +245,14 @@
             this.backgroundWorker1.WorkerReportsProgress = true;
             this.backgroundWorker1.WorkerSupportsCancellation = true;
             // 
-            // bibiteBrowseTextBox
+            // textBox1
             // 
-            this.bibiteBrowseTextBox.Location = new System.Drawing.Point(6, 85);
-            this.bibiteBrowseTextBox.Name = "bibiteBrowseTextBox";
-            this.bibiteBrowseTextBox.ReadOnly = true;
-            this.bibiteBrowseTextBox.Size = new System.Drawing.Size(255, 23);
-            this.bibiteBrowseTextBox.TabIndex = 11;
-            // 
-            // bibiteBrowseButton
-            // 
-            this.bibiteBrowseButton.Location = new System.Drawing.Point(212, 83);
-            this.bibiteBrowseButton.Name = "bibiteBrowseButton";
-            this.bibiteBrowseButton.Size = new System.Drawing.Size(56, 25);
-            this.bibiteBrowseButton.TabIndex = 12;
-            this.bibiteBrowseButton.Text = "browse";
-            this.bibiteBrowseButton.UseVisualStyleBackColor = true;
-            this.bibiteBrowseButton.Click += new System.EventHandler(this.bibiteBrowseButton_Click);
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(9, 62);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(78, 15);
-            this.label2.TabIndex = 13;
-            this.label2.Text = "Upload Bibite";
+            this.textBox1.Location = new System.Drawing.Point(9, 178);
+            this.textBox1.Multiline = true;
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(254, 552);
+            this.textBox1.TabIndex = 14;
+            this.textBox1.Text = resources.GetString("textBox1.Text");
             // 
             // Bibitinator
             // 
@@ -283,6 +295,7 @@
         private System.Windows.Forms.TextBox bibiteBrowseTextBox;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button bibiteBrowseButton;
+        private System.Windows.Forms.TextBox textBox1;
     }
 }
 
