@@ -169,6 +169,7 @@ namespace Bibitinator
             //foreach property in worldsettings
             foreach (PropertyInfo prop in typeof(WorldSettingsReflect.Root).GetProperties())
             {
+                if (worldSettingsFlow.Controls.Count < 1) break;
                 //assign property to o
                 var o = obj.GetType().GetRuntimeProperty(prop.Name).GetValue(obj);
                 //verify property is not null, if property has multiple fields (materials), iterate over those fields

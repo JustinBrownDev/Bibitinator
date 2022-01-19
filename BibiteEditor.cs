@@ -155,7 +155,7 @@ namespace Bibitinator
             del.Text = "Remove";
             del.Click += synapseDelete;
             cbIn.Text = synap.NodeIn < 43 ? relatedNodes[0].Desc : relatedNodes[0].Desc + " :" + relatedNodes[0].TypeName;
-            cbIn.Tag = bibCol.Root.brain.Nodes[synap.NodeIn].Index;
+            cbIn.Tag = relatedNodes[0].Index;
             cbOut.Text = synap.NodeOut < 43 ? relatedNodes[1].Desc : relatedNodes[1].Desc + " :" + relatedNodes[1].TypeName;
             cbOut.Tag = relatedNodes[1].Index;
             nud.Text = synap.Weight.ToString();
@@ -178,6 +178,18 @@ namespace Bibitinator
             //remove the synapse from bibCol
             var syn = bibCol.Root.brain.Synapses[Convert.ToInt32(BrainEditorPanel.Controls.IndexOf(p))];
             bibCol.Root.brain.Synapses.Remove(syn);
+            void removeFromNodesAndDropDown(BibiteReflect.Node n)
+            {
+                if(n.Desc.Contains("Hidden"))
+                {
+                    bibCol.Root.brain.Nodes.Remove(n);
+                    inputComboBox.Items.Remove(n.Desc + " :" + n.TypeName);
+                    outputComboBox.Items.Remove(n.Desc + " :" + n.TypeName);
+                }
+                
+            }
+            if (bibCol.Root.brain.Synapses.Find(x => x.NodeOut == syn.NodeIn || x.NodeIn == syn.NodeIn) == null) removeFromNodesAndDropDown(bibCol.Root.brain.Nodes.Find(x => x.Index == syn.NodeIn));
+            if (bibCol.Root.brain.Synapses.Find(x => x.NodeOut == syn.NodeOut || x.NodeIn == syn.NodeOut) == null) removeFromNodesAndDropDown(bibCol.Root.brain.Nodes.Find(x => x.Index == syn.NodeOut));
             //retrace
             Trace();
             //remove panel
@@ -189,6 +201,29 @@ namespace Bibitinator
             ConnectionsTreeView.Nodes.Clear();
             List<string> InputList = new List<string>();
             List<int> NoLoops = new List<int>();
+            //start with exit neurons
+            bibCol.Root.brain.Nodes.FindAll(x => x.TypeName != "Input" && !x.Desc.Contains("Hidden")).ForEach(TraceOutputNeurons);
+            //does tasks for before and after tracer
+            void TraceOutputNeurons(BibiteReflect.Node n)
+            {
+                InputList.Clear();
+                string listtext = string.Empty;
+                TreeNode node = new TreeNode();
+                NoLoops.Clear();
+                Tracer(n, node);
+                //change parent node text to display input neurons.
+                for (int i = 0; i < InputList.Count; i++)
+                {
+                    listtext += InputList[i];
+                    if (i != InputList.Count - 1) listtext += ", ";
+
+                }
+                node.Text = n.Desc + "  Input Neurons : " + listtext;
+                //add node to view is node is not empty
+                if (node.Nodes.Count > 0) ConnectionsTreeView.Nodes.Add(node);
+            }
+            
+            //recursive trace function
             void Tracer(BibiteReflect.Node n, TreeNode inTreeNode)
             {
 
@@ -204,7 +239,7 @@ namespace Bibitinator
                     List<double> weight = new List<double>();
                     void recordSynapseData(Synaps s)
                     {
-                        inputNeurons.Add(bibCol.Root.brain.Nodes[s.NodeIn]);
+                        inputNeurons.Add(bibCol.Root.brain.Nodes.Find(x => x.Index == s.NodeIn));
                         weight.Add(s.Weight);
                     }
                     bibCol.Root.brain.Synapses.FindAll(x => x.NodeOut == n.Index).ForEach(recordSynapseData);
@@ -221,28 +256,9 @@ namespace Bibitinator
 
                 }
             }
-            //start with exit neurons
-            foreach (BibiteReflect.Node n in bibCol.Root.brain.Nodes)
-            {
-                if (n.TypeName != "Input" && !n.Desc.Contains("Hidden"))
-                {
-                    InputList.Clear();
-                    string listtext = string.Empty;
-                    TreeNode node = new TreeNode();
-                    NoLoops.Clear();
-                    Tracer(n, node);
-                    //change parent node text to display input neurons.
-                    for (int i = 0; i < InputList.Count; i++)
-                    {
-                        listtext += InputList[i];
-                        if (i != InputList.Count - 1) listtext += ", ";
-
-                    }
-                    node.Text = n.Desc + "  Input Neurons : " + listtext;
-                    //add node to view is node is not empty
-                    if (node.Nodes.Count > 0) ConnectionsTreeView.Nodes.Add(node);
-                }
-            }
+            
+            
+            
         }
         private string ReplaceValuesInBibiteSettings(string json)
         {
@@ -252,22 +268,15 @@ namespace Bibitinator
             char[] stops = { ',', '}', ']' };
             foreach (Panel p in editorflow.Controls)
             {
-                foreach (Control c in p.Controls)
-                {
-                    if (!c.Tag.Equals("label"))
-                    {
-                        
-                        TextBox box = (TextBox)c;
-                        if (box.Text.StartsWith('.')) box.Text = 0 + box.Text;
-                        string value = box.Text;
-                        if (value.Equals("NaN")) value = "NaN\"";
-                        int propIndex = json.IndexOf('"' + box.Tag.ToString() + '"') + box.Tag.ToString().Length + 2;
-                        int valIndex = json.IndexOfAny(nums, propIndex);
-                        int stopRemoving = json.IndexOfAny(stops, valIndex) - valIndex;
-                        json = json.Remove(valIndex, stopRemoving);
-                        json = json.Insert(valIndex, value);
-                    }
-                }
+                TextBox box = (TextBox)p.Controls[1];
+                if (box.Text.StartsWith('.')) box.Text = 0 + box.Text;
+                string value = box.Text;
+                if (value.Equals("NaN")) value = "NaN\"";
+                int propIndex = json.IndexOf('"' + box.Tag.ToString() + '"') + box.Tag.ToString().Length + 2;
+                int valIndex = json.IndexOfAny(nums, propIndex);
+                int stopRemoving = json.IndexOfAny(stops, valIndex) - valIndex;
+                json = json.Remove(valIndex, stopRemoving);
+                json = json.Insert(valIndex, value);
 
             }
 
@@ -522,14 +531,18 @@ namespace Bibitinator
             if (AddNeuronComboBox.SelectedIndex > -1)
             {
                 Node n = new Node();
-                n = net.middleNodes.ToList().Find(x => x.TypeName == AddNeuronComboBox.SelectedItem.ToString());
+                Node m = net.middleNodes.ToList().Find(x => x.TypeName == AddNeuronComboBox.SelectedItem.ToString());
                 n.Index = bibCol.Root.brain.Nodes.Count();
-                int i = bibCol.Root.brain.Nodes.FindAll(x => x.Desc.Contains("Hidden")).Count();
+                while(bibCol.Root.brain.Nodes.Find(x => x.Index == n.Index) != null) n.Index++;
+                n.TypeName = m.TypeName;
+                n.Type = m.Type;
+                int i = n.Index - bibCol.Root.brain.Nodes.FindAll(x => !x.Desc.Contains("Hidden")).Count();
                 while (bibCol.Root.brain.Nodes.Find(x => x.Desc == "Hidden" + i) != null) i++;
                 n.Desc = "Hidden" + i;
                 bibCol.Root.brain.Nodes.Add(n);
                 inputComboBox.Items.Add(n.Desc + " :" + n.TypeName);
                 outputComboBox.Items.Add(n.Desc + " :" + n.TypeName);
+                Trace();
             }           
         }
     }
