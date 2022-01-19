@@ -69,9 +69,10 @@ Tips:
 when editing a bibite's neural net, select items within treeview in the lefthand panel, a 'Selected' label will appear next to the synapse in the right hand panel.
 
 
-
 Feel free to PM me on discord if you find any bugs
-EMO#2819</value>
+EMO#2819
+
+</value>
   </data>
   <metadata name="backgroundWorker1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>386, 17</value>

@@ -50,6 +50,8 @@
             this.backgroundWorker2 = new System.ComponentModel.BackgroundWorker();
             this.openWorldZipDialog = new System.Windows.Forms.OpenFileDialog();
             this.backgroundWorker3 = new System.ComponentModel.BackgroundWorker();
+            this.DownloadLatest = new System.Windows.Forms.LinkLabel();
+            this.Github = new System.Windows.Forms.LinkLabel();
             this.tabControl1.SuspendLayout();
             this.tabPage0.SuspendLayout();
             this.tabPage5.SuspendLayout();
@@ -100,6 +102,8 @@
             // 
             // tabPage0
             // 
+            this.tabPage0.Controls.Add(this.Github);
+            this.tabPage0.Controls.Add(this.DownloadLatest);
             this.tabPage0.Controls.Add(this.textBox1);
             this.tabPage0.Controls.Add(this.label2);
             this.tabPage0.Controls.Add(this.bibiteBrowseButton);
@@ -124,7 +128,7 @@
             this.textBox1.Multiline = true;
             this.textBox1.Name = "textBox1";
             this.textBox1.ReadOnly = true;
-            this.textBox1.Size = new System.Drawing.Size(254, 552);
+            this.textBox1.Size = new System.Drawing.Size(254, 400);
             this.textBox1.TabIndex = 14;
             this.textBox1.Text = resources.GetString("textBox1.Text");
             // 
@@ -255,6 +259,28 @@
             this.backgroundWorker1.WorkerReportsProgress = true;
             this.backgroundWorker1.WorkerSupportsCancellation = true;
             // 
+            // DownloadLatest
+            // 
+            this.DownloadLatest.AutoSize = true;
+            this.DownloadLatest.Location = new System.Drawing.Point(9, 593);
+            this.DownloadLatest.Name = "DownloadLatest";
+            this.DownloadLatest.Size = new System.Drawing.Size(153, 15);
+            this.DownloadLatest.TabIndex = 17;
+            this.DownloadLatest.TabStop = true;
+            this.DownloadLatest.Text = "Download the latest version";
+            this.DownloadLatest.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.DownloadLatest_LinkClicked);
+            // 
+            // Github
+            // 
+            this.Github.AutoSize = true;
+            this.Github.Location = new System.Drawing.Point(9, 623);
+            this.Github.Name = "Github";
+            this.Github.Size = new System.Drawing.Size(174, 15);
+            this.Github.TabIndex = 18;
+            this.Github.TabStop = true;
+            this.Github.Text = "View the source code on github";
+            this.Github.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.Github_LinkClicked);
+            // 
             // Bibitinator
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -297,6 +323,8 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button bibiteBrowseButton;
         private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.LinkLabel DownloadLatest;
+        private System.Windows.Forms.LinkLabel Github;
     }
 }
 

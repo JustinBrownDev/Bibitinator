@@ -518,13 +518,6 @@ namespace Bibitinator
                 MessageBox.Show("Saved Sucessfully");
             }
         }
-
-        private void NodeEditorButton_Click(object sender, EventArgs e)
-        {
-            App n = new App();
-            n.Run(new NodeEditor(bibCol.Root));
-        }
-
         private void AddNeuronButton_Click(object sender, EventArgs e)
         {
             if (AddNeuronComboBox.SelectedIndex > -1)

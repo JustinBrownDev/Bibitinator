@@ -1,22 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
 using System.IO.Compression;
-using System.Collections;
 using Newtonsoft.Json.Linq;
-using System.Text.Json;
 using Bibitinator.Models;
-using Bibitinator.Models.BibiteTracer;
-using System.Runtime;
-using System.Globalization;
 using System.Text.RegularExpressions;
 using System.Diagnostics;
 using Newtonsoft.Json;
@@ -169,7 +157,7 @@ namespace Bibitinator
             //foreach property in worldsettings
             foreach (PropertyInfo prop in typeof(WorldSettingsReflect.Root).GetProperties())
             {
-                if (worldSettingsFlow.Controls.Count < 1) break;
+                if (worldsettingsJson == "") break;
                 //assign property to o
                 var o = obj.GetType().GetRuntimeProperty(prop.Name).GetValue(obj);
                 //verify property is not null, if property has multiple fields (materials), iterate over those fields
@@ -360,6 +348,22 @@ namespace Bibitinator
             {
                 worldFilePathTextBox.Text = "invalid";
             }
+        }
+
+        private void DownloadLatest_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            Process myProcess = new Process();
+            myProcess.StartInfo.UseShellExecute = true;
+            myProcess.StartInfo.FileName = "https://drive.google.com/file/d/1qEVMuttBSJbB0fDtXi09xOSAlZv-5g8U/view?usp=sharing";
+            myProcess.Start();
+        }
+
+        private void Github_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            Process myProcess = new Process();
+            myProcess.StartInfo.UseShellExecute = true;
+            myProcess.StartInfo.FileName = "https://github.com/JustinBrownDev/Bibitinator";
+            myProcess.Start();
         }
     }
 }
