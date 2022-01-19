@@ -82,6 +82,7 @@ namespace Bibitinator
                     bibiteListView.Items.Add(bibiteName);
                 }
                 bibiteListView.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
+                //get world settings, populate world settings panel
                 using (StreamReader r = new StreamReader(extractTo + "\\settings" + settingsExtension))
                 {
                     var json = r.ReadToEnd();
@@ -162,10 +163,15 @@ namespace Bibitinator
         }
         private void populateSettings()
         {
+            worldSettingsFlow.Controls.Clear();
+            //create model for world settings
             WorldSettingsReflect.Root obj = JsonConvert.DeserializeObject<WorldSettingsReflect.Root>(worldsettingsJson);
+            //foreach property in worldsettings
             foreach (PropertyInfo prop in typeof(WorldSettingsReflect.Root).GetProperties())
             {
+                //assign property to o
                 var o = obj.GetType().GetRuntimeProperty(prop.Name).GetValue(obj);
+                //verify property is not null, if property has multiple fields (materials), iterate over those fields
                 if (prop.PropertyType.GetProperties().Count() > 1 && obj.GetType().GetProperty(prop.Name).GetValue(obj) != null)
                 {
                     foreach (PropertyInfo info in typeof(WorldSettingsReflect.Materials).GetProperties())
@@ -173,6 +179,7 @@ namespace Bibitinator
                         var e = o.GetType().GetRuntimeProperty(info.Name).GetValue(o);
                         foreach(PropertyInfo info2 in typeof(WorldSettingsReflect.Materials).GetProperty(info.Name).PropertyType.GetProperties())
                         {
+                            //assign each field to a panel
                             var n = e.GetType().GetRuntimeProperty(info2.Name).GetValue(e);
                             Label l = new Label();
                             TextBox t = new TextBox();
@@ -191,6 +198,7 @@ namespace Bibitinator
                         }                     
                     }
                 }
+                //for properties with 1 field, assign field to a panel
                 else if (!(obj.GetType().GetProperty(prop.Name).GetValue(obj) == null))
                 {           
                     Label l = new Label();
@@ -212,6 +220,7 @@ namespace Bibitinator
         }
         private string replaceValuesInSettings(string json)
         {
+
             char[] nums = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-', 'N', 'f', 't' };
             char[] stops = { ',', '}', ']' };
             if (File.Exists((Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "/bibitinator/new/settings" + settingsExtension)))
@@ -222,9 +231,12 @@ namespace Bibitinator
             {
                 foreach (Control o in c.Controls)
                 {
+                    //ignore labels (iterate over the text boxes)
                     if (!o.Tag.Equals("label") && json.Contains(o.Tag.ToString()))
                     {
                         TextBox box = (TextBox)o;
+                        //add 0 to values with a leading decimal point
+                        if(box.Text.StartsWith('.')) box.Text = 0 + box.Text;
                         string value = box.Text;
                         if (value.Equals("NaN")) value = "NaN\"";
                         else value = value.ToLower();
@@ -236,18 +248,20 @@ namespace Bibitinator
                     }
                 }
             }
+            //remove whitespace
             json = Regex.Replace(json, @"\s", "");
             return json;
         }
+        //This is the funky one.
         private void zipInOrder(string targetFileName, string zipname)
         {
             int lastSlashIndex = openWorldZipDialog.FileName.LastIndexOf('\\');
             
             if (Directory.Exists(extractTo + "\\temp\\")) Directory.Delete(extractTo + "\\temp\\");
             Directory.CreateDirectory(extractTo + "\\temp\\");
-
+            //In order for the game to load the zip correctly, the files must be in this order according to the offset: settings, scene, bibites, eggs
             //create temp directory, rename files to be in the correct order alphabetically
-            //files within the zip folder need to be saved in the right order
+            //files within the zip folder need to be saved in the right order, then renamed back to their original names
             File.Copy(extractTo + "\\settings" + settingsExtension, extractTo + "\\temp\\asettings" + settingsExtension);
             File.Copy(extractTo + "\\scene" + sceneExtension, extractTo + "\\temp\\bscene" + sceneExtension);
             Directory.Move(extractTo + "\\bibites", extractTo + "\\temp\\cbibites");

@@ -30,13 +30,12 @@ namespace Bibitinator
             propertiesTree.Nodes[0].Expand();
             //name the nodes
             TreeNode brainTree = propertiesTree.Nodes[0].Nodes[6].Nodes[2];
-            List<string> dic = new List<string>();
             int x = 0;
+            //x is the offset needed to select the correct node in new versions, if the version is new apply the offset.
             if (brainTree.Nodes[0].Nodes.Count == 8) x = 2;
             foreach (TreeNode node in brainTree.Nodes)
             {
                 string desc = node.Nodes[6 - x].Nodes[0].Text + " (" + node.Nodes[1].Nodes[0].Text + ")";
-                dic.Add(desc);
                 node.Text = desc;
             }
             bibCol.Root = JsonConvert.DeserializeObject<BibiteReflect.Root>(bibCol.json);
@@ -45,6 +44,7 @@ namespace Bibitinator
             splitContainer1.Cursor = Cursors.Arrow;
             this.Text = bibCol.name;
         }
+        //recursive function for building properties explorer
         public TreeNode createNode(BibiteCollection col)
         {
             var jobj = JObject.Parse(col.json);
@@ -86,7 +86,7 @@ namespace Bibitinator
         }
         public void buildTextboxes()
         {
-            //BibiteReflect.Root obj = JsonConvert.DeserializeObject<BibiteReflect.Root>(bibCol.json);
+            //build genes editor
             foreach (PropertyInfo prop in typeof(BibiteReflect.Genes1).GetProperties())
             {
                 if (prop.PropertyType == typeof(double) && bibCol.json.Contains(prop.Name))
@@ -107,6 +107,7 @@ namespace Bibitinator
                     p.Parent = editorflow;
                 }
             }
+            //build nodes dropdowns
             List<Node> nodes = bibCol.Root.brain.Nodes;
             foreach(Node node in net.middleNodes)
             {
@@ -174,44 +175,39 @@ namespace Bibitinator
         private void synapseDelete(object sender, EventArgs e)
         {
             Panel p = (Panel)((Button)sender).Parent;
-
-            int synIn = Convert.ToInt32(p.Controls[0].Tag);
-            int synOut = Convert.ToInt32(p.Controls[1].Tag);
-            decimal strength = Convert.ToDecimal(p.Controls[2].Text);
-
+            //remove the synapse from bibCol
             var syn = bibCol.Root.brain.Synapses[Convert.ToInt32(BrainEditorPanel.Controls.IndexOf(p))];
             bibCol.Root.brain.Synapses.Remove(syn);
+            //retrace
             Trace();
+            //remove panel
             BrainEditorPanel.Controls.Remove(((Button)sender).Parent);
         }
 
         private void Trace()
         {
-            //BibiteReflect.Root obj = JsonConvert.DeserializeObject<BibiteReflect.Root>(bibCol.json);
             ConnectionsTreeView.Nodes.Clear();
             List<string> InputList = new List<string>();
             List<int> NoLoops = new List<int>();
             void Tracer(BibiteReflect.Node n, TreeNode inTreeNode)
             {
 
-                //the neuron being passed in has already been added to the dataset.
-
+                //the neuron being passed in has already been added to the tree.
+                //when it reaches the end (input) add it to the list of input neruons for that output, unless its already in there
                 if (n.TypeName.Equals("Input") && !InputList.Contains(n.Desc)) InputList.Add(n.Desc);
+                //make sure the function isnt in an infinite loop
                 else if (!NoLoops.Contains(n.Index))
                 {
                     NoLoops.Add(n.Index);
-                    //make list nodes with synapses going into current neuron
+                    //make list of nodes with synapses going into current neuron, and a parallel list of weights
                     List<BibiteReflect.Node> inputNeurons = new List<BibiteReflect.Node>();
                     List<double> weight = new List<double>();
-
-                    foreach (BibiteReflect.Synaps s in bibCol.Root.brain.Synapses)
+                    void recordSynapseData(Synaps s)
                     {
-                        if (s.NodeOut == n.Index)
-                        {
-                            inputNeurons.Add(bibCol.Root.brain.Nodes[s.NodeIn]);
-                            weight.Add(s.Weight);
-                        }
+                        inputNeurons.Add(bibCol.Root.brain.Nodes[s.NodeIn]);
+                        weight.Add(s.Weight);
                     }
+                    bibCol.Root.brain.Synapses.FindAll(x => x.NodeOut == n.Index).ForEach(recordSynapseData);
                     //find inputs, recurse
                     for (int i = 0; i < inputNeurons.Count; i++)
                     {
@@ -235,6 +231,7 @@ namespace Bibitinator
                     TreeNode node = new TreeNode();
                     NoLoops.Clear();
                     Tracer(n, node);
+                    //change parent node text to display input neurons.
                     for (int i = 0; i < InputList.Count; i++)
                     {
                         listtext += InputList[i];
@@ -242,18 +239,17 @@ namespace Bibitinator
 
                     }
                     node.Text = n.Desc + "  Input Neurons : " + listtext;
+                    //add node to view is node is not empty
                     if (node.Nodes.Count > 0) ConnectionsTreeView.Nodes.Add(node);
                 }
             }
         }
         private string ReplaceValuesInBibiteSettings(string json)
         {
+            //chars to look for to find where the value starts
             char[] nums = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-', 'N', 'f', 't' };
+            //chars to look for to find where the value ends
             char[] stops = { ',', '}', ']' };
-            if (File.Exists(bibCol.extractFolder + bibCol.name))
-            {
-                File.Delete(bibCol.extractFolder + bibCol.name);
-            }
             foreach (Panel p in editorflow.Controls)
             {
                 foreach (Control c in p.Controls)
@@ -262,6 +258,7 @@ namespace Bibitinator
                     {
                         
                         TextBox box = (TextBox)c;
+                        if (box.Text.StartsWith('.')) box.Text = 0 + box.Text;
                         string value = box.Text;
                         if (value.Equals("NaN")) value = "NaN\"";
                         int propIndex = json.IndexOf('"' + box.Tag.ToString() + '"') + box.Tag.ToString().Length + 2;
@@ -280,6 +277,10 @@ namespace Bibitinator
         private void saveButton_Click(object sender, EventArgs e)
         {
             Cursor = Cursors.WaitCursor;
+            if (File.Exists(bibCol.extractFolder + bibCol.name))
+            {
+                File.Delete(bibCol.extractFolder + bibCol.name);
+            }
             string json = ReplaceValuesInBibiteSettings(bibCol.json);
             bibCol.json = json;
             File.WriteAllText(bibCol.extractFolder + bibCol.name, json);
@@ -489,13 +490,16 @@ namespace Bibitinator
                 string version = bibCol.json.Substring(bibCol.json.IndexOf("version") - 1, versionLength + 1);
                 json = json.Insert(json.LastIndexOf('}'),"," + version);
             }
+            //copy postition to new json file
             int positionLocation = bibCol.json.IndexOf("position") - 1;
             int positionLength = bibCol.json.IndexOf(']',positionLocation) - positionLocation;
             string position = bibCol.json.Substring(positionLocation,positionLength + 1);
             position = Regex.Replace(position, @"\s", "");
             json = json.Replace("\"_position\":null", position);
+            //set genes in new json file
             json = ReplaceValuesInBibiteSettings(json);
             bibCol.json = json;
+            //confirm file was created
             if (File.Exists(bibCol.extractFolder + name))
             {
                 File.Delete(bibCol.extractFolder + name);

@@ -5,7 +5,12 @@
     <TargetFramework>net6.0-windows</TargetFramework>
     <UseWindowsForms>true</UseWindowsForms>
     <UseWPF>True</UseWPF>
+    <ApplicationIcon>diagram-46.ico</ApplicationIcon>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="diagram-46.ico" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="7-Zip.CommandLine" Version="18.1.0" />

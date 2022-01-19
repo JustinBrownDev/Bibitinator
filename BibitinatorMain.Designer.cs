@@ -34,6 +34,7 @@
             this.worldFilePathTextBox = new System.Windows.Forms.TextBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage0 = new System.Windows.Forms.TabPage();
+            this.textBox1 = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.bibiteBrowseButton = new System.Windows.Forms.Button();
             this.bibiteBrowseTextBox = new System.Windows.Forms.TextBox();
@@ -49,7 +50,6 @@
             this.backgroundWorker2 = new System.ComponentModel.BackgroundWorker();
             this.openWorldZipDialog = new System.Windows.Forms.OpenFileDialog();
             this.backgroundWorker3 = new System.ComponentModel.BackgroundWorker();
-            this.textBox1 = new System.Windows.Forms.TextBox();
             this.tabControl1.SuspendLayout();
             this.tabPage0.SuspendLayout();
             this.tabPage5.SuspendLayout();
@@ -117,6 +117,16 @@
             this.tabPage0.TabIndex = 5;
             this.tabPage0.Text = "File";
             this.tabPage0.UseVisualStyleBackColor = true;
+            // 
+            // textBox1
+            // 
+            this.textBox1.Location = new System.Drawing.Point(9, 178);
+            this.textBox1.Multiline = true;
+            this.textBox1.Name = "textBox1";
+            this.textBox1.ReadOnly = true;
+            this.textBox1.Size = new System.Drawing.Size(254, 552);
+            this.textBox1.TabIndex = 14;
+            this.textBox1.Text = resources.GetString("textBox1.Text");
             // 
             // label2
             // 
@@ -244,15 +254,6 @@
             // 
             this.backgroundWorker1.WorkerReportsProgress = true;
             this.backgroundWorker1.WorkerSupportsCancellation = true;
-            // 
-            // textBox1
-            // 
-            this.textBox1.Location = new System.Drawing.Point(9, 178);
-            this.textBox1.Multiline = true;
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(254, 552);
-            this.textBox1.TabIndex = 14;
-            this.textBox1.Text = resources.GetString("textBox1.Text");
             // 
             // Bibitinator
             // 
