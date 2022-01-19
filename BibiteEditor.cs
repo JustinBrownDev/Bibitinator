@@ -151,7 +151,7 @@ namespace Bibitinator
             cbIn.ReadOnly = true;
             cbOut.ReadOnly = true;
             nud.ReadOnly = true;
-            nud.Tag = synap;
+            del.Tag = synap;
             del.Text = "Remove";
             del.Click += synapseDelete;
             cbIn.Text = synap.NodeIn < 43 ? relatedNodes[0].Desc : relatedNodes[0].Desc + " :" + relatedNodes[0].TypeName;
@@ -174,9 +174,8 @@ namespace Bibitinator
         }
         private void synapseDelete(object sender, EventArgs e)
         {
-            Panel p = (Panel)((Button)sender).Parent;
             //remove the synapse from bibCol
-            var syn = bibCol.Root.brain.Synapses[Convert.ToInt32(BrainEditorPanel.Controls.IndexOf(p))];
+            Synaps syn = (Synaps)((Button)sender).Tag;
             bibCol.Root.brain.Synapses.Remove(syn);
             void removeFromNodesAndDropDown(BibiteReflect.Node n)
             {
@@ -318,7 +317,7 @@ namespace Bibitinator
             }
             foreach (Control con in BrainEditorPanel.Controls)
             {
-                if (con.Controls[2].Tag == ConnectionsTreeView.SelectedNode.Tag)
+                if (con.Controls[3].Tag == ConnectionsTreeView.SelectedNode.Tag)
                 {
                     //MovingLabel.Parent.Controls.Remove(MovingLabel);
                     con.Controls.Add(MovingLabel);

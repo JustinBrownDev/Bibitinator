@@ -129,7 +129,7 @@ namespace Bibitinator
         private void worldSettingsSaveButton_Click(object sender, EventArgs e)
         {
             string json = replaceValuesInSettings(worldsettingsJson);
-
+            if (json == "") return;
             File.WriteAllText(extractTo + "\\settings" + settingsExtension, json);
 
             if (File.Exists(extractTo + "\\settings" + settingsExtension))
