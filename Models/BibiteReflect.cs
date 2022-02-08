@@ -43,6 +43,7 @@ namespace Bibitinator.Models
             public double ClockSpeed { get; set; }
             public double PheroSense { get; set; }
             public double Diet { get; set; }
+            public double Defense { get; set; }
             public double ImmuneSystemStrength { get; set; }
             public double HerdSeparationWeight { get; set; }
             public double HerdAlignmentWeight { get; set; }

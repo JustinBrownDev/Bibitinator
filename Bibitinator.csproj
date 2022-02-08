@@ -9,7 +9,23 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Models\BibiteModel\**" />
+    <Compile Remove="Models\BibiteTracer\**" />
+    <EmbeddedResource Remove="Models\BibiteModel\**" />
+    <EmbeddedResource Remove="Models\BibiteTracer\**" />
+    <None Remove="Models\BibiteModel\**" />
+    <None Remove="Models\BibiteTracer\**" />
+    <Page Remove="Models\BibiteModel\**" />
+    <Page Remove="Models\BibiteTracer\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Constructors.cs" />
+    <Compile Remove="dump.cs" />
+    <Compile Remove="Models\BibiteReflect.cs" />
+    <Compile Remove="Models\JsonModel.cs" />
     <Compile Remove="Models\listItemModel.cs" />
+    <Compile Remove="Models\WorldSettingsReflect.cs" />
   </ItemGroup>
 
   <ItemGroup>

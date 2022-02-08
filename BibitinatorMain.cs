@@ -9,6 +9,7 @@ using System.Text.RegularExpressions;
 using System.Diagnostics;
 using Newtonsoft.Json;
 using System.Reflection;
+using System.Globalization;
 
 namespace Bibitinator
 {
@@ -19,7 +20,7 @@ namespace Bibitinator
             InitializeComponent();
             tabControl1.SelectedTab = tabPage0;
         }
-
+        
         public string worldsettingsJson = string.Empty;
         public string bibiteExtension = string.Empty;
         public string settingsExtension = string.Empty;
@@ -84,7 +85,6 @@ namespace Bibitinator
             }
             
         }
-        
         private void Analyze(object sender, EventArgs e)
         {
             if(bibiteListView.SelectedIndices.Count > 0)
@@ -153,89 +153,57 @@ namespace Bibitinator
         {
             worldSettingsFlow.Controls.Clear();
             //create model for world settings
-            WorldSettingsReflect.Root obj = JsonConvert.DeserializeObject<WorldSettingsReflect.Root>(worldsettingsJson);
+            JObject obj = (JObject)JsonConvert.DeserializeObject(worldsettingsJson);
+            //Invariant Culture
+
             //foreach property in worldsettings
-            foreach (PropertyInfo prop in typeof(WorldSettingsReflect.Root).GetProperties())
+            //foreach (PropertyInfo prop in typeof(WorldSettingsReflect.Root).GetProperties())
+            
+            foreach (JProperty prop in obj.Properties())
             {
                 if (worldsettingsJson == "") break;
                 //assign property to o
-                var o = obj.GetType().GetRuntimeProperty(prop.Name).GetValue(obj);
-                //verify property is not null, if property has multiple fields (materials), iterate over those fields
-                if (prop.PropertyType.GetProperties().Count() > 1 && obj.GetType().GetProperty(prop.Name).GetValue(obj) != null)
-                {
-                    foreach (PropertyInfo info in typeof(WorldSettingsReflect.Materials).GetProperties())
-                    {
-                        var e = o.GetType().GetRuntimeProperty(info.Name).GetValue(o);
-                        foreach(PropertyInfo info2 in typeof(WorldSettingsReflect.Materials).GetProperty(info.Name).PropertyType.GetProperties())
-                        {
-                            //assign each field to a panel
-                            var n = e.GetType().GetRuntimeProperty(info2.Name).GetValue(e);
-                            Label l = new Label();
-                            TextBox t = new TextBox();
-                            l.Text = System.Text.RegularExpressions.Regex.Replace(info2.Name, "[A-Z]", " $0");
-                            l.Tag = "label";
-                            t.Text = n.ToString();
-                            t.Tag = info2.Name;
-                            Panel p = new Panel();
-                            p.Width = l.Width + t.Width;
-                            p.Height = l.Height + t.Height;
-                            l.Parent = p;
-                            l.Dock = DockStyle.Left;
-                            t.Parent = p;
-                            t.Dock = DockStyle.Right;
-                            p.Parent = worldSettingsFlow;
-                        }                     
-                    }
-                }
-                //for properties with 1 field, assign field to a panel
-                else if (!(obj.GetType().GetProperty(prop.Name).GetValue(obj) == null))
-                {           
-                    Label l = new Label();
-                    TextBox t = new TextBox();                 
-                    l.Text = System.Text.RegularExpressions.Regex.Replace(prop.Name, "[A-Z]", " $0");
-                    l.Tag = "label";
-                    t.Text = o.GetType().GetProperty("Value").GetValue(o).ToString();
-                    t.Tag = prop.Name;
-                    Panel p = new Panel();
-                    p.Width = l.Width + t.Width;
-                    p.Height = l.Height + t.Height;
-                    l.Parent = p;
-                    l.Dock = DockStyle.Left;
-                    t.Parent = p;
-                    t.Dock = DockStyle.Right;
-                    p.Parent = worldSettingsFlow;
-                }              
+                //var o = obj.GetType().GetRuntimeProperty(prop.Name).GetValue(obj);
+                var o = obj.Property(prop.Name);
+                Label l = new Label();
+                TextBox t = new TextBox();
+                l.Text = System.Text.RegularExpressions.Regex.Replace(prop.Name, "[A-Z]", " $0");
+                l.Tag = "label";
+                //t.Text = o.GetType().GetProperty("Value").GetValue(o).ToString();
+                var text = o.Value;
+                t.Text = obj[prop.Name].Value<string>("Value");
+                t.Tag = prop.Name;
+                Panel p = new Panel();
+                p.Width = l.Width + t.Width;
+                p.Height = l.Height + t.Height;
+                l.Parent = p;
+                l.Dock = DockStyle.Left;
+                t.Parent = p;
+                t.Dock = DockStyle.Right;
+                p.Parent = worldSettingsFlow;
             }
         }
         private string replaceValuesInSettings(string json)
         {
 
             char[] nums = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-', 'N', 'f', 't' };
-            char[] stops = { ',', '}', ']' };
+            char[] stops = { '"', '}', ']' };
             if (File.Exists((Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "/bibitinator/new/settings" + settingsExtension)))
             {
                 File.Delete((Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "/bibitinator/new/settings" + settingsExtension));
             }
             foreach (Control c in worldSettingsFlow.Controls)
             {
-                foreach (Control o in c.Controls)
-                {
-                    //ignore labels (iterate over the text boxes)
-                    if (!o.Tag.Equals("label") && json.Contains(o.Tag.ToString()))
-                    {
-                        TextBox box = (TextBox)o;
-                        //add 0 to values with a leading decimal point
-                        if(box.Text.StartsWith('.')) box.Text = 0 + box.Text;
-                        string value = box.Text;
-                        if (value.Equals("NaN")) value = "NaN\"";
-                        else value = value.ToLower();
-                        int propIndex = json.IndexOf('"' + box.Tag.ToString() + '"') + box.Tag.ToString().Length + 2;
-                        int valIndex = json.IndexOfAny(nums, propIndex);
-                        int stopRemoving = json.IndexOfAny(stops, valIndex) - valIndex;
-                        json = json.Remove(valIndex, stopRemoving);
-                        json = json.Insert(valIndex, value);
-                    }
-                }
+                TextBox box = (TextBox)c.Controls[1];
+                string value = Regex.Replace(box.Text, ",", ".");
+                if (value.StartsWith('.')) value = 0 + value;
+                if (value.Equals("NaN")) value = "NaN\"";
+                else value = value.ToLower();
+                int propIndex = json.IndexOf('"' + box.Tag.ToString() + '"') + box.Tag.ToString().Length + 2;
+                int valIndex = json.IndexOfAny(nums, propIndex);
+                int stopRemoving = json.IndexOfAny(stops, valIndex) - valIndex;
+                json = json.Remove(valIndex, stopRemoving);
+                json = json.Insert(valIndex, value);
             }
             //remove whitespace
             json = Regex.Replace(json, @"\s", "");
@@ -248,6 +216,7 @@ namespace Bibitinator
             
             if (Directory.Exists(extractTo + "\\temp\\")) Directory.Delete(extractTo + "\\temp\\");
             Directory.CreateDirectory(extractTo + "\\temp\\");
+            
             //In order for the game to load the zip correctly, the files must be in this order according to the offset: settings, scene, bibites, eggs
             //create temp directory, rename files to be in the correct order alphabetically
             //files within the zip folder need to be saved in the right order, then renamed back to their original names
@@ -262,32 +231,34 @@ namespace Bibitinator
             
             //create zip file
             ZipFile.CreateFromDirectory(extractTo + "\\temp", targetFileName + zipname);
-            if(!Directory.Exists(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\bibites"))
+            if(!Directory.Exists(Directory.GetCurrentDirectory() + "\\bibites"))
             {
-                Directory.CreateDirectory(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\bibites");
-                File.Create(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\bibites\\strange Behavior.txt");
-            }            
-            //rename files back to correct names within the directory 
+                Directory.CreateDirectory(Directory.GetCurrentDirectory() + "\\bibites");
+                File.Create(Directory.GetCurrentDirectory() + "\\bibites\\strange Behavior.txt");
+            }
+            //rename files back to correct names within the directory
             ProcessStartInfo p = new ProcessStartInfo();
-            p.FileName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\7z.exe";
-            p.Arguments = "a \"" + targetFileName + zipname + "\" \"" + Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\cbibites\\";
+            
+            p.FileName = Directory.GetCurrentDirectory() + "\\7z.exe";
+            p.Arguments = "a \"" + targetFileName + zipname + "\" \"" + Directory.GetCurrentDirectory() + "\\cbibites\\";
             p.WindowStyle = ProcessWindowStyle.Hidden;
             Process x = Process.Start(p);
             x.WaitForExit();
 
-            p.FileName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\7z.exe";
+            p.FileName = Directory.GetCurrentDirectory() + "\\7z.exe";
             p.Arguments = "d \"" + targetFileName + zipname + "\" \"" + "cbibites\\strange Behavior.txt";
             p.WindowStyle = ProcessWindowStyle.Hidden;
             Process y = Process.Start(p);
             //
             y.WaitForExit();
-            p.FileName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\7z.exe";
+            p.FileName = Directory.GetCurrentDirectory() + "\\7z.exe";
             p.Arguments = "rn \"" + targetFileName + zipname + "\" asettings" + settingsExtension + " settings" + settingsExtension + " bscene" + sceneExtension + " scene" + sceneExtension + " cbibites\\ bibites\\ deggs\\ eggs\\";
             p.WindowStyle = ProcessWindowStyle.Hidden;
             Process z = Process.Start(p);
-
+            
             //return the bibites & eggs folders back & delete the temp folder 
             z.WaitForExit();
+            
             Directory.Move(extractTo + "\\temp\\cbibites", extractTo + "\\bibites");
             Directory.Move(extractTo + "\\temp\\deggs", extractTo + "\\eggs");
             Directory.Delete(extractTo + "\\temp\\", true);
@@ -328,9 +299,10 @@ namespace Bibitinator
                     JObject jobj = new JObject();
                     using (StreamReader r = new StreamReader(fileDialog.FileName))
                     {
-                        var json = r.ReadToEnd();
-                        jobj = JObject.Parse(json);
-                        result = jobj.ToString(Newtonsoft.Json.Formatting.Indented);
+                        //var json = r.ReadToEnd();
+                        //jobj = JObject.Parse(json);
+                        //result = jobj.ToString();
+                        result = r.ReadToEnd();
                     }
                     col.json = result;
                     int nameStart = fileDialog.FileName.LastIndexOf("\\") + 1;
