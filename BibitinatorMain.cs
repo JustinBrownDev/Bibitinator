@@ -155,27 +155,53 @@ namespace Bibitinator
             //create model for world settings
             JObject obj = (JObject)JsonConvert.DeserializeObject(worldsettingsJson);
             //Invariant Culture
-
+            if (worldsettingsJson == "") return;
             //foreach property in worldsettings
             //foreach (PropertyInfo prop in typeof(WorldSettingsReflect.Root).GetProperties())
-            
-            foreach (JProperty prop in obj.Properties())
+            string location = string.Empty;
+            foreach (JToken prop in obj.Children())
             {
-                if (worldsettingsJson == "") break;
-                //assign property to o
-                //var o = obj.GetType().GetRuntimeProperty(prop.Name).GetValue(obj);
-                var o = obj.Property(prop.Name);
+                settingsDigger(prop);
+            }            
+            void settingsDigger (JToken prop)
+            { 
+                if(prop.Values().ToList().Count() > 1)
+                {
+                    if (prop is JProperty) location = Regex.Replace(((JProperty)prop).Name, "Settings", "");
+
+                    foreach (JToken subprop in prop.Children())
+                    { 
+                        settingsDigger(subprop);
+                    }
+                    location = string.Empty;
+                }
+                else
+                {
+                    buildBox(prop, location);
+                }
+            }
+            void buildBox (JToken prop, string location) 
+            {
+                string name = ((JProperty)prop).Name;
+                string value = string.Empty;
+                if (!prop.Children().First().HasValues)
+                {
+                    value = prop.Children().First().Value<string>();
+                }
+                else
+                {
+                    value = prop.Children().First().Children().First().Children().Values().ToList().First().ToString();
+                }
                 Label l = new Label();
                 TextBox t = new TextBox();
-                l.Text = System.Text.RegularExpressions.Regex.Replace(prop.Name, "[A-Z]", " $0");
+                l.Text = location + " " + Regex.Replace(name, "[A-Z]", " $0");
                 l.Tag = "label";
-                //t.Text = o.GetType().GetProperty("Value").GetValue(o).ToString();
-                var text = o.Value;
-                t.Text = obj[prop.Name].Value<string>("Value");
-                t.Tag = prop.Name;
+                t.Text = value;
+                t.Tag = name;
                 Panel p = new Panel();
                 p.Width = l.Width + t.Width;
                 p.Height = l.Height + t.Height;
+                p.Tag = location;
                 l.Parent = p;
                 l.Dock = DockStyle.Left;
                 t.Parent = p;
@@ -187,19 +213,22 @@ namespace Bibitinator
         {
 
             char[] nums = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-', 'N', 'f', 't' };
-            char[] stops = { '"', '}', ']' };
+            char[] stops = { '"', '}', ']', ',' };
             if (File.Exists((Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "/bibitinator/new/settings" + settingsExtension)))
             {
                 File.Delete((Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "/bibitinator/new/settings" + settingsExtension));
             }
             foreach (Control c in worldSettingsFlow.Controls)
             {
+                string location = string.Empty;
+                if (!c.Tag.Equals(string.Empty)) location = c.Tag + "Settings";
+                
                 TextBox box = (TextBox)c.Controls[1];
                 string value = Regex.Replace(box.Text, ",", ".");
                 if (value.StartsWith('.')) value = 0 + value;
                 if (value.Equals("NaN")) value = "NaN\"";
                 else value = value.ToLower();
-                int propIndex = json.IndexOf('"' + box.Tag.ToString() + '"') + box.Tag.ToString().Length + 2;
+                int propIndex = json.IndexOf('"' + box.Tag.ToString() + '"', json.IndexOf(location)) + box.Tag.ToString().Length + 2;
                 int valIndex = json.IndexOfAny(nums, propIndex);
                 int stopRemoving = json.IndexOfAny(stops, valIndex) - valIndex;
                 json = json.Remove(valIndex, stopRemoving);

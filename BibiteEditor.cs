@@ -471,7 +471,6 @@ namespace Bibitinator
             //create a list of nodes that are associated with the trimmed list of synapses
             foreach (JToken s in synapses)
             {
-
                 if (validatedNodes.Children().Where(x => x.Value<int>("Index") == s.Value<int>("NodeIn")).Count() == 0) validatedNodes.Add(nodesResult.Find(x => x.Value<int>("Index") == s.Value<int>("NodeIn")));
                 if (validatedNodes.Children().Where(x => x.Value<int>("Index") == s.Value<int>("NodeOut")).Count() == 0) validatedNodes.Add(nodesResult.Find(x => x.Value<int>("Index") == s.Value<int>("NodeOut")));
             }
