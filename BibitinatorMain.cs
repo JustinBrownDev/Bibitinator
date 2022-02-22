@@ -258,7 +258,7 @@ namespace Bibitinator
                 JToken prop;
                 if (setting.internalLocation != "")
                 {
-                    prop = props.Find(x => ((JProperty)x).Name == setting.internalName && ((JProperty)props[120].Parent.Parent).Name == setting.internalLocation);
+                    prop = props.Find(x => ((JProperty)x).Name == setting.internalName && ((JProperty)x.Parent.Parent).Name == setting.internalLocation);
                 }
                 else
                 {
@@ -326,7 +326,8 @@ namespace Bibitinator
                 }
                 else
                 {
-                    value = prop.Children().First().Children().First().Children().Values().ToList().First().ToString();
+                    value = prop.Values().First().Values().First().Value<string>();
+                    //value = prop.Children().First().Children().First().Children().Values().ToList().First().ToString();
                 }
                 //build property panel
                 Label l = new Label();
@@ -505,8 +506,10 @@ namespace Bibitinator
                         Control box = c.Controls[1];
 
                         //get internalLocation if it exists
-                        if (!c.Tag.Equals(string.Empty)) location = c.Tag.ToString();
-
+                        if (!c.Tag.Equals(string.Empty))
+                        {
+                            location = c.Tag.ToString();
+                        }
                         //format input data
                         if (box.GetType() == typeof(CheckBox))
                         {
