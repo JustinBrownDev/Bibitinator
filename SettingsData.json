@@ -1,0 +1,1093 @@
+{
+  "knownSettings": [
+    {
+      "internalName": "virusEnabled",
+      "internalLocation": "",
+      "externalName": "Enable Viruses",
+      "Category": "Simulation",
+      "parent": "Viruses",
+      "favorite": false,
+      "isBool": true
+    },
+    {
+      "internalName": "virusGenerationTime",
+      "internalLocation": "",
+      "externalName": "Virus Generation Time",
+      "Category": "Simulation",
+      "parent": "Viruses",
+      "favorite": false,
+      "isBool": false
+    },
+    {
+      "internalName": "virusHealthDamageRate",
+      "internalLocation": "",
+      "externalName": "Virus Health Damage Rate",
+      "Category": "Simulation",
+      "parent": "Viruses",
+      "favorite": false,
+      "isBool": false
+    },
+    {
+      "internalName": "virusEnergyDamageRate",
+      "internalLocation": "",
+      "externalName": "Virus Energy Damage Rate",
+      "Category": "Simulation",
+      "parent": "Viruses",
+      "favorite": false,
+      "isBool": false
+    },
+    {
+      "internalName": "virusImmuneDamage",
+      "internalLocation": "",
+      "externalName": "Virus Immune Damage",
+      "Category": "Simulation",
+      "parent": "Viruses",
+      "favorite": false,
+      "isBool": false
+    },
+    {
+      "internalName": "cellInfectionProbabilityScale",
+      "internalLocation": "",
+      "externalName": "Cell Infection Probability Scale",
+      "Category": "Simulation",
+      "parent": "Viruses",
+      "favorite": false,
+      "isBool": false
+    },
+    {
+      "internalName": "cellInfectionProbabilityPower",
+      "internalLocation": "",
+      "externalName": "Cell Infection Probability Power",
+      "Category": "Simulation",
+      "parent": "Viruses",
+      "favorite": false,
+      "isBool": false
+    },
+    {
+      "internalName": "skinInfectionProbabilityScale",
+      "internalLocation": "",
+      "externalName": "Skin Infection Probability Scale",
+      "Category": "Simulation",
+      "parent": "Viruses",
+      "favorite": false,
+      "isBool": false
+    },
+    {
+      "internalName": "skinInfectionProbabilityPower",
+      "internalLocation": "",
+      "externalName": "Skin Infection Probability Power",
+      "Category": "Simulation",
+      "parent": "Viruses",
+      "favorite": false,
+      "isBool": false
+    },
+    {
+      "internalName": "airInfectionProbabilityScale",
+      "internalLocation": "",
+      "externalName": "Air Infection Probability Scale",
+      "Category": "Simulation",
+      "parent": "Viruses",
+      "favorite": false,
+      "isBool": false
+    },
+    {
+      "internalName": "airInfectionProbabilityPower",
+      "internalLocation": "",
+      "externalName": "Air Infection Probability Power",
+      "Category": "Simulation",
+      "parent": "Viruses",
+      "favorite": false,
+      "isBool": false
+    },
+    {
+      "internalName": "defaultAirVirionProduction",
+      "internalLocation": "",
+      "externalName": "Default Air Viron Production",
+      "Category": "Simulation",
+      "parent": "Viruses",
+      "favorite": false,
+      "isBool": false
+    },
+    {
+      "internalName": "airVirionSpeed",
+      "internalLocation": "",
+      "externalName": "Default Air Viron Speed",
+      "Category": "Simulation",
+      "parent": "Viruses",
+      "favorite": false,
+      "isBool": false
+    },
+    {
+      "internalName": "airVirionLifetime",
+      "internalLocation": "",
+      "externalName": "Air Viron Lifetime",
+      "Category": "Simulation",
+      "parent": "Viruses",
+      "favorite": false,
+      "isBool": false
+    },
+    {
+      "internalName": "immuneActivationHealthImpact",
+      "internalLocation": "",
+      "externalName": "Immune Activation Health Impact",
+      "Category": "Simulation",
+      "parent": "Viruses",
+      "favorite": false,
+      "isBool": false
+    },
+    {
+      "internalName": "immuneActivationEnergyImpact",
+      "internalLocation": "",
+      "externalName": "Immune Activation Energy Impact",
+      "Category": "Simulation",
+      "parent": "Viruses",
+      "favorite": false,
+      "isBool": false
+    },
+    {
+      "internalName": "immuneAbsoluteFighting",
+      "internalLocation": "",
+      "externalName": "Immune Absolute Fighting Rate",
+      "Category": "Simulation",
+      "parent": "Viruses",
+      "favorite": false,
+      "isBool": false
+    },
+    {
+      "internalName": "immuneRelativeFighting",
+      "internalLocation": "",
+      "externalName": "Immune Relative Fighting Rate",
+      "Category": "Simulation",
+      "parent": "Viruses",
+      "favorite": false,
+      "isBool": false
+    },
+    {
+      "internalName": "virusCountFightingImpact",
+      "internalLocation": "",
+      "externalName": "Virus Count Fighting Imapact",
+      "Category": "Simulation",
+      "parent": "Viruses",
+      "favorite": false,
+      "isBool": false
+    },
+    {
+      "internalName": "pelletCollision",
+      "internalLocation": "",
+      "externalName": "Pellet Collision",
+      "Category": "Simulation",
+      "parent": "Pellet Collision",
+      "favorite": false,
+      "isBool": true
+    },
+    {
+      "internalName": "pelletRotation",
+      "internalLocation": "",
+      "externalName": "Pellet Rotation",
+      "Category": "Simulation",
+      "parent": "Pellet Collision",
+      "favorite": false,
+      "isBool": true
+    },
+    {
+      "internalName": "pelletMerge",
+      "internalLocation": "",
+      "externalName": "Pellet Merge",
+      "Category": "Simulation",
+      "parent": "Pellet Collision",
+      "favorite": false,
+      "isBool": true
+    },
+    {
+      "internalName": "randomVirgin",
+      "internalLocation": "",
+      "externalName": "Randomize Virgin Births",
+      "Category": "Simulation",
+      "parent": "Cheat Options",
+      "favorite": false,
+      "isBool": true
+    },
+    {
+      "internalName": "voidAvoidance",
+      "internalLocation": "",
+      "externalName": "Void-No-Mo",
+      "Category": "Simulation",
+      "parent": "Cheat Options",
+      "favorite": false,
+      "isBool": true
+    },
+    {
+      "internalName": "voidAvoidanceDistance",
+      "internalLocation": "",
+      "externalName": "Void Avoidance Distance",
+      "Category": "Simulation",
+      "parent": "Cheat Options",
+      "favorite": false,
+      "isBool": false
+    },
+    {
+      "internalName": "SimulationSize",
+      "internalLocation": "",
+      "externalName": "Size of Simulation",
+      "Category": "Simulation",
+      "parent": "World Parameters",
+      "favorite": false,
+      "isBool": false
+    },
+    {
+      "internalName": "biomassDensity",
+      "internalLocation": "",
+      "externalName": "Biomass Density",
+      "Category": "Simulation",
+      "parent": "World Parameters",
+      "favorite": true,
+      "isBool": false
+    },
+    {
+      "internalName": "pelletSpawnSlicingFactor",
+      "internalLocation": "",
+      "externalName": "Pellet Spawn Number Factor",
+      "Category": "Simulation",
+      "parent": "World Parameters",
+      "favorite": false,
+      "isBool": false
+    },
+    {
+      "internalName": "pelletSpawnSlicingPower",
+      "internalLocation": "",
+      "externalName": "Pellet Spawn Number Power",
+      "Category": "Simulation",
+      "parent": "World Parameters",
+      "favorite": false,
+      "isBool": false
+    },
+    {
+      "internalName": "pelletSpawnSizeFactor",
+      "internalLocation": "",
+      "externalName": "Pellet Spawn Size Factor",
+      "Category": "Simulation",
+      "parent": "World Parameters",
+      "favorite": false,
+      "isBool": false
+    },
+    {
+      "internalName": "pelletSpawnConcentration",
+      "internalLocation": "",
+      "externalName": "Pellet Growth Concentration",
+      "Category": "Simulation",
+      "parent": "World Parameters",
+      "favorite": false,
+      "isBool": false
+    },
+    {
+      "internalName": "pelletConcentrationSpawnType",
+      "internalLocation": "",
+      "externalName": "Pellet Spawn Concentration Type",
+      "Category": "Simulation",
+      "parent": "World Parameters",
+      "favorite": false,
+      "isBool": false
+    },
+    {
+      "internalName": "pelletSpawnDrift",
+      "internalLocation": "",
+      "externalName": "Pellet Spawner Drift Power",
+      "Category": "Simulation",
+      "parent": "World Parameters",
+      "favorite": false,
+      "isBool": false
+    },
+    {
+      "internalName": "plantGrowth",
+      "internalLocation": "",
+      "externalName": "Plant Growth",
+      "Category": "Simulation",
+      "parent": "World Parameters",
+      "favorite": true,
+      "isBool": false
+    },
+    {
+      "internalName": "pelletEnergy",
+      "internalLocation": "",
+      "externalName": "Plant Pellet Energy",
+      "Category": "Simulation",
+      "parent": "World Parameters",
+      "favorite": false,
+      "isBool": false
+    },
+    {
+      "internalName": "bibiteGrowth",
+      "internalLocation": "",
+      "externalName": "Bibite Spawning Rate",
+      "Category": "Simulation",
+      "parent": "World Parameters",
+      "favorite": false,
+      "isBool": false
+    },
+    {
+      "internalName": "capBibiteGrowth",
+      "internalLocation": "",
+      "externalName": "Cap Bibite Spawn",
+      "Category": "Simulation",
+      "parent": "World Parameters",
+      "favorite": false,
+      "isBool": true
+    },
+    {
+      "internalName": "limitBibiteBirth",
+      "internalLocation": "",
+      "externalName": "Limit Bibite Birth",
+      "Category": "Simulation",
+      "parent": "World Parameters",
+      "favorite": false,
+      "isBool": true
+    },
+    {
+      "internalName": "meatRot",
+      "internalLocation": "",
+      "externalName": "Enable Meat Rotting",
+      "Category": "Simulation",
+      "parent": "Enable Meat Rotting",
+      "favorite": true,
+      "isBool": true
+    },
+    {
+      "internalName": "meatRotTime",
+      "internalLocation": "",
+      "externalName": "Meat Rot Delay",
+      "Category": "Simulation",
+      "parent": "Enable Meat Rotting",
+      "favorite": true,
+      "isBool": false
+    },
+    {
+      "internalName": "meatRotRate",
+      "internalLocation": "",
+      "externalName": "Meat Rot Rate",
+      "Category": "Simulation",
+      "parent": "Enable Meat Rotting",
+      "favorite": true,
+      "isBool": false
+    },
+    {
+      "internalName": "dragCoefficient",
+      "internalLocation": "",
+      "externalName": "Drag Coefficient",
+      "Category": "Simulation",
+      "parent": "Physics Parameters",
+      "favorite": false,
+      "isBool": false
+    },
+    {
+      "internalName": "forwardForce",
+      "internalLocation": "",
+      "externalName": "Muslce Force",
+      "Category": "Simulation",
+      "parent": "Physics Parameters",
+      "favorite": false,
+      "isBool": false
+    },
+    {
+      "internalName": "backwardFraction",
+      "internalLocation": "",
+      "externalName": "Backward Force Fraction",
+      "Category": "Simulation",
+      "parent": "Physics Parameters",
+      "favorite": false,
+      "isBool": false
+    },
+    {
+      "internalName": "bibiteMassDensity",
+      "internalLocation": "",
+      "externalName": "Base Bibite Mass Density",
+      "Category": "Simulation",
+      "parent": "Physics Parameters",
+      "favorite": false,
+      "isBool": false
+    },
+    {
+      "internalName": "defenceMassFactor",
+      "internalLocation": "",
+      "externalName": "Defence Mass Impact",
+      "Category": "Simulation",
+      "parent": "Physics Parameters",
+      "favorite": false,
+      "isBool": false
+    },
+    {
+      "internalName": "defenceDamageReductionFactor",
+      "internalLocation": "",
+      "externalName": "Max Defence Damage Reduction",
+      "Category": "Simulation",
+      "parent": "Physics Parameters",
+      "favorite": false,
+      "isBool": false
+    },
+    {
+      "internalName": "stomachContentContribution",
+      "internalLocation": "",
+      "externalName": "Stomach Content Weight Contribution",
+      "Category": "Simulation",
+      "parent": "Physics Parameters",
+      "favorite": false,
+      "isBool": false
+    },
+    {
+      "internalName": "bitingPressure",
+      "internalLocation": "",
+      "externalName": "Biting Pressure Constant",
+      "Category": "Simulation",
+      "parent": "Physics Parameters",
+      "favorite": false,
+      "isBool": false
+    },
+    {
+      "internalName": "throwingForce",
+      "internalLocation": "",
+      "externalName": "Throwing Force Constant",
+      "Category": "Simulation",
+      "parent": "Physics Parameters",
+      "favorite": false,
+      "isBool": false
+    },
+    {
+      "internalName": "bitingDamage",
+      "internalLocation": "",
+      "externalName": "Biting Damage Constant",
+      "Category": "Simulation",
+      "parent": "Physics Parameters",
+      "favorite": false,
+      "isBool": false
+    },
+    {
+      "internalName": "collisionDamageConstant",
+      "internalLocation": "",
+      "externalName": "Collision Damage Constant",
+      "Category": "Simulation",
+      "parent": "Physics Parameters",
+      "favorite": false,
+      "isBool": false
+    },
+    {
+      "internalName": "collisionDamageThreshold",
+      "internalLocation": "",
+      "externalName": "Collision Damage Threshold",
+      "Category": "Simulation",
+      "parent": "Physics Parameters",
+      "favorite": false,
+      "isBool": false
+    },
+    {
+      "internalName": "ageingThreshold",
+      "internalLocation": "",
+      "externalName": "Ageing Threshold",
+      "Category": "Energy",
+      "parent": "Bibite Aging",
+      "favorite": false,
+      "isBool": false
+    },
+    {
+      "internalName": "ageStrengthPenalties",
+      "internalLocation": "",
+      "externalName": "Age Strength Penalty",
+      "Category": "Energy",
+      "parent": "Bibite Aging",
+      "favorite": false,
+      "isBool": false
+    },
+    {
+      "internalName": "ageMetabolismPenalties",
+      "internalLocation": "",
+      "externalName": "Age Metabolism Penalty",
+      "Category": "Energy",
+      "parent": "Bibite Aging",
+      "favorite": false,
+      "isBool": false
+    },
+    {
+      "internalName": "maxEnergyToMaxHealthRatio",
+      "internalLocation": "",
+      "externalName": "Max Energy to Max Health",
+      "Category": "Energy",
+      "parent": "Bibite Balance",
+      "favorite": false,
+      "isBool": false
+    },
+    {
+      "internalName": "metabolismCost",
+      "internalLocation": "",
+      "externalName": "Default Metabolism Cost",
+      "Category": "Energy",
+      "parent": "Bibite Balance",
+      "favorite": false,
+      "isBool": false
+    },
+    {
+      "internalName": "moveCost",
+      "internalLocation": "",
+      "externalName": "Default Move Cost",
+      "Category": "Energy",
+      "parent": "Bibite Balance",
+      "favorite": false,
+      "isBool": false
+    },
+    {
+      "internalName": "turnCost",
+      "internalLocation": "",
+      "externalName": "Default Turn Cost",
+      "Category": "Energy",
+      "parent": "Bibite Balance",
+      "favorite": false,
+      "isBool": false
+    },
+    {
+      "internalName": "neuronBirthCost",
+      "internalLocation": "",
+      "externalName": "Neuron Birth Cost",
+      "Category": "Energy",
+      "parent": "Bibite Balance",
+      "favorite": false,
+      "isBool": false
+    },
+    {
+      "internalName": "synapseBirthCost",
+      "internalLocation": "",
+      "externalName": "Synapse Birth Cost",
+      "Category": "Energy",
+      "parent": "Bibite Balance",
+      "favorite": false,
+      "isBool": false
+    },
+    {
+      "internalName": "neuronUpkeepCost",
+      "internalLocation": "",
+      "externalName": "Neuron Upkeep Cost",
+      "Category": "Energy",
+      "parent": "Bibite Balance",
+      "favorite": false,
+      "isBool": false
+    },
+    {
+      "internalName": "synapseUpkeepCost",
+      "internalLocation": "",
+      "externalName": "Synapse Upkeep Cost",
+      "Category": "Energy",
+      "parent": "Bibite Balance",
+      "favorite": false,
+      "isBool": false
+    },
+    {
+      "internalName": "pheromoneProductionCost",
+      "internalLocation": "",
+      "externalName": "Pheromone Production Cost",
+      "Category": "Energy",
+      "parent": "Bibite Balance",
+      "favorite": false,
+      "isBool": false
+    },
+    {
+      "internalName": "energyDensity",
+      "internalLocation": "PlantSettings",
+      "externalName": "Energy Density",
+      "Category": "Energy",
+      "parent": "Plants",
+      "favorite": false,
+      "isBool": false
+    },
+    {
+      "internalName": "massDensity",
+      "internalLocation": "PlantSettings",
+      "externalName": "Mass Density",
+      "Category": "Energy",
+      "parent": "Plants",
+      "favorite": false,
+      "isBool": false
+    },
+    {
+      "internalName": "hardness",
+      "internalLocation": "PlantSettings",
+      "externalName": "Hardness",
+      "Category": "Energy",
+      "parent": "Plants",
+      "favorite": false,
+      "isBool": false
+    },
+    {
+      "internalName": "digestionRate",
+      "internalLocation": "PlantSettings",
+      "externalName": "Base Reactivity",
+      "Category": "Energy",
+      "parent": "Plants",
+      "favorite": false,
+      "isBool": false
+    },
+    {
+      "internalName": "maxEfficiency",
+      "internalLocation": "PlantSettings",
+      "externalName": "Max Conversion Efficiency",
+      "Category": "Energy",
+      "parent": "Plants",
+      "favorite": false,
+      "isBool": false
+    },
+    {
+      "internalName": "minEfficiency",
+      "internalLocation": "PlantSettings",
+      "externalName": "Min Conversion Efficiency",
+      "Category": "Energy",
+      "parent": "Plants",
+      "favorite": false,
+      "isBool": false
+    },
+    {
+      "internalName": "energyDensity",
+      "internalLocation": "MeatSettings",
+      "externalName": "Energy Density",
+      "Category": "Energy",
+      "parent": "Meat",
+      "favorite": false,
+      "isBool": false
+    },
+    {
+      "internalName": "massDensity",
+      "internalLocation": "MeatSettings",
+      "externalName": "Mass Density",
+      "Category": "Energy",
+      "parent": "Meat",
+      "favorite": false,
+      "isBool": false
+    },
+    {
+      "internalName": "hardness",
+      "internalLocation": "MeatSettings",
+      "externalName": "Hardness",
+      "Category": "Energy",
+      "parent": "Meat",
+      "favorite": false,
+      "isBool": false
+    },
+    {
+      "internalName": "digestionRate",
+      "internalLocation": "MeatSettings",
+      "externalName": "Base Reactivity",
+      "Category": "Energy",
+      "parent": "Meat",
+      "favorite": false,
+      "isBool": false
+    },
+    {
+      "internalName": "maxEfficiency",
+      "internalLocation": "MeatSettings",
+      "externalName": "Max Conversion Efficiency",
+      "Category": "Energy",
+      "parent": "Meat",
+      "favorite": false,
+      "isBool": false
+    },
+    {
+      "internalName": "minEfficiency",
+      "internalLocation": "MeatSettings",
+      "externalName": "Min Conversion Efficiency",
+      "Category": "Energy",
+      "parent": "Meat",
+      "favorite": false,
+      "isBool": false
+    },
+    {
+      "internalName": "baseBodyEnergyRatio",
+      "internalLocation": "",
+      "externalName": "Base Body Points Cost",
+      "Category": "Energy",
+      "parent": "Meat Balance",
+      "favorite": false,
+      "isBool": false
+    },
+    {
+      "internalName": "healthBodyRatio",
+      "internalLocation": "",
+      "externalName": "Health to Body Constant",
+      "Category": "Energy",
+      "parent": "Meat Balance",
+      "favorite": false,
+      "isBool": false
+    },
+    {
+      "internalName": "viewAngleBodyCost",
+      "internalLocation": "",
+      "externalName": "View Angle Body Cost",
+      "Category": "Energy",
+      "parent": "Meat Balance",
+      "favorite": false,
+      "isBool": false
+    },
+    {
+      "internalName": "viewRadiusBodyCost",
+      "internalLocation": "",
+      "externalName": "View Radius Body Cost",
+      "Category": "Energy",
+      "parent": "Meat Balance",
+      "favorite": false,
+      "isBool": false
+    },
+    {
+      "internalName": "strengthBodyCost",
+      "internalLocation": "",
+      "externalName": "Strength Body Cost",
+      "Category": "Energy",
+      "parent": "Meat Balance",
+      "favorite": false,
+      "isBool": false
+    },
+    {
+      "internalName": "immuneBodyCost",
+      "internalLocation": "",
+      "externalName": "Immune System Body Cost",
+      "Category": "Energy",
+      "parent": "Meat Balance",
+      "favorite": false,
+      "isBool": false
+    },
+    {
+      "internalName": "colorR",
+      "internalLocation": "",
+      "externalName": "Red Color",
+      "Category": "Genes",
+      "parent": "Visible Genes",
+      "favorite": false,
+      "isBool": false
+    },
+    {
+      "internalName": "colorG",
+      "internalLocation": "",
+      "externalName": "Green Color",
+      "Category": "Genes",
+      "parent": "Visible Genes",
+      "favorite": false,
+      "isBool": false
+    },
+    {
+      "internalName": "colorB",
+      "internalLocation": "",
+      "externalName": "Blue Color",
+      "Category": "Genes",
+      "parent": "Visible Genes",
+      "favorite": false,
+      "isBool": false
+    },
+    {
+      "internalName": "diet",
+      "internalLocation": "",
+      "externalName": "Diet",
+      "Category": "Genes",
+      "parent": "Visible Genes",
+      "favorite": false,
+      "isBool": false
+    },
+    {
+      "internalName": "sizeRatio",
+      "internalLocation": "",
+      "externalName": "Size Ratio",
+      "Category": "Genes",
+      "parent": "Visible Genes",
+      "favorite": false,
+      "isBool": false
+    },
+    {
+      "internalName": "speedRatio",
+      "internalLocation": "",
+      "externalName": "Metabolism Speed",
+      "Category": "Genes",
+      "parent": "Visible Genes",
+      "favorite": false,
+      "isBool": false
+    },
+    {
+      "internalName": "viewAngle",
+      "internalLocation": "",
+      "externalName": "View Angle",
+      "Category": "Genes",
+      "parent": "Visible Genes",
+      "favorite": false,
+      "isBool": false
+    },
+    {
+      "internalName": "viewRadius",
+      "internalLocation": "",
+      "externalName": "View Radius",
+      "Category": "Genes",
+      "parent": "Visible Genes",
+      "favorite": false,
+      "isBool": false
+    },
+    {
+      "internalName": "strength",
+      "internalLocation": "",
+      "externalName": "Mouth Strength",
+      "Category": "Genes",
+      "parent": "Visible Genes",
+      "favorite": false,
+      "isBool": false
+    },
+    {
+      "internalName": "defence",
+      "internalLocation": "",
+      "externalName": "Defence",
+      "Category": "Genes",
+      "parent": "Visible Genes",
+      "favorite": false,
+      "isBool": false
+    },
+    {
+      "internalName": "mutationChance",
+      "internalLocation": "",
+      "externalName": "Average Gene Mutations",
+      "Category": "Genes",
+      "parent": "Mutation Genes",
+      "favorite": false,
+      "isBool": false
+    },
+    {
+      "internalName": "mutationVariance",
+      "internalLocation": "",
+      "externalName": "Gene Mutation Variance",
+      "Category": "Genes",
+      "parent": "Mutation Genes",
+      "favorite": false,
+      "isBool": false
+    },
+    {
+      "internalName": "brainMutationChance",
+      "internalLocation": "",
+      "externalName": "Average Brain Mutations",
+      "Category": "Genes",
+      "parent": "Mutation Genes",
+      "favorite": false,
+      "isBool": false
+    },
+    {
+      "internalName": "brainMutationVariance",
+      "internalLocation": "",
+      "externalName": "Brain Mutation Variance",
+      "Category": "Genes",
+      "parent": "Mutation Genes",
+      "favorite": false,
+      "isBool": false
+    },
+    {
+      "internalName": "synapseMutationChance",
+      "internalLocation": "",
+      "externalName": "Synapse Mutation Probability",
+      "Category": "Genes",
+      "parent": "Brain Mutation Probabilities",
+      "favorite": false,
+      "isBool": false
+    },
+    {
+      "internalName": "neuronMutationChance",
+      "internalLocation": "",
+      "externalName": "Neuron Mutation Probability",
+      "Category": "Genes",
+      "parent": "Brain Mutation Probabilities",
+      "favorite": false,
+      "isBool": false
+    },
+    {
+      "internalName": "synapseChangeChance",
+      "internalLocation": "",
+      "externalName": "Synapse Strength Mutation Probability",
+      "Category": "Genes",
+      "parent": "Synapse Mutation Probabilities",
+      "favorite": false,
+      "isBool": false
+    },
+    {
+      "internalName": "synapseFlipChance",
+      "internalLocation": "",
+      "externalName": "Synapse Flip Probability",
+      "Category": "Genes",
+      "parent": "Synapse Mutation Probabilities",
+      "favorite": false,
+      "isBool": false
+    },
+    {
+      "internalName": "synapseToggleChance",
+      "internalLocation": "",
+      "externalName": "Synapse Toggle Probability",
+      "Category": "Genes",
+      "parent": "Synapse Mutation Probabilities",
+      "favorite": false,
+      "isBool": false
+    },
+    {
+      "internalName": "synapseAddChance",
+      "internalLocation": "",
+      "externalName": "Synapse Add Probability",
+      "Category": "Genes",
+      "parent": "Synapse Mutation Probabilities",
+      "favorite": false,
+      "isBool": false
+    },
+    {
+      "internalName": "synapseRemoveChance",
+      "internalLocation": "",
+      "externalName": "Synapse Removal Probability",
+      "Category": "Genes",
+      "parent": "Synapse Mutation Probabilities",
+      "favorite": false,
+      "isBool": false
+    },
+    {
+      "internalName": "neuronChangeChance",
+      "internalLocation": "",
+      "externalName": "Neuron Function Mutation Probability",
+      "Category": "Genes",
+      "parent": "Neuron Mutation Probabilities",
+      "favorite": false,
+      "isBool": false
+    },
+    {
+      "internalName": "neuronAddChance",
+      "internalLocation": "",
+      "externalName": "Neuron Add Probability",
+      "Category": "Genes",
+      "parent": "Neuron Mutation Probabilities",
+      "favorite": false,
+      "isBool": false
+    },
+    {
+      "internalName": "neuronRemoveChance",
+      "internalLocation": "",
+      "externalName": "Neuron Removal Probability",
+      "Category": "Genes",
+      "parent": "Neuron Mutation Probabilities",
+      "favorite": false,
+      "isBool": false
+    },
+    {
+      "internalName": "layTime",
+      "internalLocation": "",
+      "externalName": "Lay Time",
+      "Category": "Genes",
+      "parent": "Other Genes",
+      "favorite": false,
+      "isBool": false
+    },
+    {
+      "internalName": "broodTime",
+      "internalLocation": "",
+      "externalName": "Brood Time",
+      "Category": "Genes",
+      "parent": "Other Genes",
+      "favorite": false,
+      "isBool": false
+    },
+    {
+      "internalName": "hatchTime",
+      "internalLocation": "",
+      "externalName": "Hatch Time",
+      "Category": "Genes",
+      "parent": "Other Genes",
+      "favorite": false,
+      "isBool": false
+    },
+    {
+      "internalName": "growthFactor",
+      "internalLocation": "",
+      "externalName": "Growth Scale Factor",
+      "Category": "Genes",
+      "parent": "Other Genes",
+      "favorite": false,
+      "isBool": false
+    },
+    {
+      "internalName": "growthMaturityFactor",
+      "internalLocation": "",
+      "externalName": "Growth Maturity Factor",
+      "Category": "Genes",
+      "parent": "Other Genes",
+      "favorite": false,
+      "isBool": false
+    },
+    {
+      "internalName": "growthMaturityExponent",
+      "internalLocation": "",
+      "externalName": "Growth Maturity Exponant",
+      "Category": "Genes",
+      "parent": "Other Genes",
+      "favorite": false,
+      "isBool": false
+    },
+    {
+      "internalName": "clkSpeed",
+      "internalLocation": "",
+      "externalName": "Clock Period",
+      "Category": "Genes",
+      "parent": "Other Genes",
+      "favorite": false,
+      "isBool": false
+    },
+    {
+      "internalName": "pherosense",
+      "internalLocation": "",
+      "externalName": "Pheromones Sensing Radius",
+      "Category": "Genes",
+      "parent": "Other Genes",
+      "favorite": false,
+      "isBool": false
+    },
+    {
+      "internalName": "baseImmuneActivation",
+      "internalLocation": "",
+      "externalName": "Base Immune Activation",
+      "Category": "Genes",
+      "parent": "Other Genes",
+      "favorite": false,
+      "isBool": false
+    },
+    {
+      "internalName": "herdSeparationWeight",
+      "internalLocation": "",
+      "externalName": "Herd Separation Weight",
+      "Category": "Genes",
+      "parent": "Herding Genes",
+      "favorite": false,
+      "isBool": false
+    },
+    {
+      "internalName": "herdAlignmentWeight",
+      "internalLocation": "",
+      "externalName": "Herd Alignment Weight",
+      "Category": "Genes",
+      "parent": "Herding Genes",
+      "favorite": false,
+      "isBool": false
+    },
+    {
+      "internalName": "herdCohesionWeight",
+      "internalLocation": "",
+      "externalName": "Herd Cohesion Weight",
+      "Category": "Genes",
+      "parent": "Herding Genes",
+      "favorite": false,
+      "isBool": false
+    },
+    {
+      "internalName": "herdVelocityWeight",
+      "internalLocation": "",
+      "externalName": "Herd Velocity Weight",
+      "Category": "Genes",
+      "parent": "Herding Genes",
+      "favorite": false,
+      "isBool": false
+    },
+    {
+      "internalName": "herdSeparationDistance",
+      "internalLocation": "",
+      "externalName": "Herd Separation Distance",
+      "Category": "Genes",
+      "parent": "Herding Genes",
+      "favorite": false,
+      "isBool": false
+    }
+  ]
+}

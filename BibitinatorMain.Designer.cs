@@ -34,6 +34,8 @@
             this.worldFilePathTextBox = new System.Windows.Forms.TextBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage0 = new System.Windows.Forms.TabPage();
+            this.Github = new System.Windows.Forms.LinkLabel();
+            this.DownloadLatest = new System.Windows.Forms.LinkLabel();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.bibiteBrowseButton = new System.Windows.Forms.Button();
@@ -45,13 +47,11 @@
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.WorldResetButton = new System.Windows.Forms.Button();
             this.worldSettingsSaveButton = new System.Windows.Forms.Button();
-            this.worldSettingsFlow = new System.Windows.Forms.FlowLayoutPanel();
+            this.worldSettingTabControl = new System.Windows.Forms.TabControl();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.backgroundWorker2 = new System.ComponentModel.BackgroundWorker();
             this.openWorldZipDialog = new System.Windows.Forms.OpenFileDialog();
             this.backgroundWorker3 = new System.ComponentModel.BackgroundWorker();
-            this.DownloadLatest = new System.Windows.Forms.LinkLabel();
-            this.Github = new System.Windows.Forms.LinkLabel();
             this.tabControl1.SuspendLayout();
             this.tabPage0.SuspendLayout();
             this.tabPage5.SuspendLayout();
@@ -121,6 +121,28 @@
             this.tabPage0.TabIndex = 5;
             this.tabPage0.Text = "File";
             this.tabPage0.UseVisualStyleBackColor = true;
+            // 
+            // Github
+            // 
+            this.Github.AutoSize = true;
+            this.Github.Location = new System.Drawing.Point(9, 623);
+            this.Github.Name = "Github";
+            this.Github.Size = new System.Drawing.Size(174, 15);
+            this.Github.TabIndex = 18;
+            this.Github.TabStop = true;
+            this.Github.Text = "View the source code on github";
+            this.Github.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.Github_LinkClicked);
+            // 
+            // DownloadLatest
+            // 
+            this.DownloadLatest.AutoSize = true;
+            this.DownloadLatest.Location = new System.Drawing.Point(9, 593);
+            this.DownloadLatest.Name = "DownloadLatest";
+            this.DownloadLatest.Size = new System.Drawing.Size(153, 15);
+            this.DownloadLatest.TabIndex = 17;
+            this.DownloadLatest.TabStop = true;
+            this.DownloadLatest.Text = "Download the latest version";
+            this.DownloadLatest.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.DownloadLatest_LinkClicked);
             // 
             // textBox1
             // 
@@ -206,8 +228,9 @@
             // 
             // splitContainer1
             // 
-            this.splitContainer1.Cursor = System.Windows.Forms.Cursors.VSplit;
+            this.splitContainer1.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer1.IsSplitterFixed = true;
             this.splitContainer1.Location = new System.Drawing.Point(3, 3);
             this.splitContainer1.Name = "splitContainer1";
             // 
@@ -219,7 +242,7 @@
             // 
             // splitContainer1.Panel2
             // 
-            this.splitContainer1.Panel2.Controls.Add(this.worldSettingsFlow);
+            this.splitContainer1.Panel2.Controls.Add(this.worldSettingTabControl);
             this.splitContainer1.Size = new System.Drawing.Size(1330, 732);
             this.splitContainer1.SplitterDistance = 86;
             this.splitContainer1.TabIndex = 1;
@@ -244,42 +267,20 @@
             this.worldSettingsSaveButton.UseVisualStyleBackColor = true;
             this.worldSettingsSaveButton.Click += new System.EventHandler(this.worldSettingsSaveButton_Click);
             // 
-            // worldSettingsFlow
+            // worldSettingTabControl
             // 
-            this.worldSettingsFlow.AutoScroll = true;
-            this.worldSettingsFlow.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.worldSettingsFlow.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.worldSettingsFlow.Location = new System.Drawing.Point(0, 0);
-            this.worldSettingsFlow.Name = "worldSettingsFlow";
-            this.worldSettingsFlow.Size = new System.Drawing.Size(1240, 732);
-            this.worldSettingsFlow.TabIndex = 0;
+            this.worldSettingTabControl.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.worldSettingTabControl.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.worldSettingTabControl.Location = new System.Drawing.Point(0, 0);
+            this.worldSettingTabControl.Name = "worldSettingTabControl";
+            this.worldSettingTabControl.SelectedIndex = 0;
+            this.worldSettingTabControl.Size = new System.Drawing.Size(1240, 732);
+            this.worldSettingTabControl.TabIndex = 0;
             // 
             // backgroundWorker1
             // 
             this.backgroundWorker1.WorkerReportsProgress = true;
             this.backgroundWorker1.WorkerSupportsCancellation = true;
-            // 
-            // DownloadLatest
-            // 
-            this.DownloadLatest.AutoSize = true;
-            this.DownloadLatest.Location = new System.Drawing.Point(9, 593);
-            this.DownloadLatest.Name = "DownloadLatest";
-            this.DownloadLatest.Size = new System.Drawing.Size(153, 15);
-            this.DownloadLatest.TabIndex = 17;
-            this.DownloadLatest.TabStop = true;
-            this.DownloadLatest.Text = "Download the latest version";
-            this.DownloadLatest.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.DownloadLatest_LinkClicked);
-            // 
-            // Github
-            // 
-            this.Github.AutoSize = true;
-            this.Github.Location = new System.Drawing.Point(9, 623);
-            this.Github.Name = "Github";
-            this.Github.Size = new System.Drawing.Size(174, 15);
-            this.Github.TabIndex = 18;
-            this.Github.TabStop = true;
-            this.Github.Text = "View the source code on github";
-            this.Github.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.Github_LinkClicked);
             // 
             // Bibitinator
             // 
@@ -314,7 +315,6 @@
         private System.ComponentModel.BackgroundWorker backgroundWorker2;
         private System.Windows.Forms.OpenFileDialog openWorldZipDialog;
         private System.ComponentModel.BackgroundWorker backgroundWorker3;
-        private System.Windows.Forms.FlowLayoutPanel worldSettingsFlow;
         private System.Windows.Forms.Button worldSettingsSaveButton;
         private System.Windows.Forms.Button exportButton;
         private System.Windows.Forms.SplitContainer splitContainer1;
@@ -325,6 +325,7 @@
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.LinkLabel DownloadLatest;
         private System.Windows.Forms.LinkLabel Github;
+        private System.Windows.Forms.TabControl worldSettingTabControl;
     }
 }
 

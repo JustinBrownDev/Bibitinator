@@ -25,6 +25,7 @@
     <Compile Remove="Models\BibiteReflect.cs" />
     <Compile Remove="Models\JsonModel.cs" />
     <Compile Remove="Models\listItemModel.cs" />
+    <Compile Remove="Models\NeuralNetEditorNodes.cs" />
     <Compile Remove="Models\WorldSettingsReflect.cs" />
   </ItemGroup>
 
@@ -64,6 +65,12 @@
 
   <ItemGroup>
     <Folder Include="NewFolder\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="SettingsData.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

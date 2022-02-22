@@ -11,14 +11,11 @@ using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-//using static Bibitinator.Models.NeuralNetEditorNodes;
-//using static Bibitinator.Models.BibiteReflect;
 
 namespace Bibitinator
 {
     public partial class BibiteEditor : Form
     {
-        NeuralNetEditorNodes net = new NeuralNetEditorNodes();
         BibiteCollection bibCol = null;
         public List<string> middleNodeNames = new List<string> { "Sigmoid", "Linear", "TanH", "Sine", "ReLu", "Gaussian", "Latch", "Differential" };
         public BibiteEditor(BibiteCollection col)
@@ -28,8 +25,10 @@ namespace Bibitinator
         }
         private void BibiteEditor_Load(object sender, EventArgs e)
         {
+            //create properties tree, expand parent node
             propertiesTree.Nodes.Add(createNode(bibCol));
             propertiesTree.Nodes[0].Expand();
+            
             //name the nodes
             TreeNode brainTree = propertiesTree.Nodes[0].Nodes[6].Nodes[2];
             int x = 0;
@@ -40,13 +39,18 @@ namespace Bibitinator
                 string desc = node.Nodes[6 - x].Nodes[0].Text + " (" + node.Nodes[1].Nodes[0].Text + ")";
                 node.Text = desc;
             }
+            //deserialize json
             bibCol.dynRoot = (JObject)JsonConvert.DeserializeObject(bibCol.json, new JsonSerializerSettings() { Culture = CultureInfo.InvariantCulture });
-            //bibCol.Root = JsonConvert.DeserializeObject<BibiteReflect.Root>(bibCol.json, new JsonSerializerSettings(){Culture = CultureInfo.InvariantCulture});
+            //build genes editor
             buildTextboxes();
+            //trace inputs and outputs
             Trace();
+            //for some reason this wont stay in the designer, needs to be set programattically
             splitContainer1.Cursor = Cursors.Arrow;
+            //set window text to bibite name
             this.Text = bibCol.name;
         }
+
         //recursive function for building properties explorer
         public TreeNode createNode(BibiteCollection col)
         {
@@ -90,11 +94,6 @@ namespace Bibitinator
         public void buildTextboxes()
         {
             //build genes editor
-            foreach (FieldInfo info in bibCol.dynRoot.GetType().GetFields())
-            {
-                string text = info.Name;
-                string text2 = info.GetValue(bibCol.dynRoot).ToString();
-            }
             foreach (JProperty item in bibCol.dynRoot["genes"]["genes"].ToList())
             {
                 Label l = new Label();
@@ -112,13 +111,19 @@ namespace Bibitinator
                 t.Dock = DockStyle.Right;
                 p.Parent = editorflow;
             }
+
             //build nodes dropdowns
+
+            //list of nodes
             List<JToken> nodes = bibCol.dynRoot["brain"]["Nodes"].ToList();
-            //List<Node> nodes = bibCol.Root.brain.Nodes;
+            
+            //middle node dropdown
             foreach (string node in middleNodeNames)
             {
                 AddNeuronComboBox.Items.Add(node);
             }
+
+            //for each node, inputs in inputs, outputs in outputs, hidden nodes in both
             foreach (JToken node in nodes)
             {
 
@@ -136,10 +141,12 @@ namespace Bibitinator
                     outputComboBox.Items.Add(node.Value<string>("Desc") + " :Output");
                 }
             }
+
             inputComboBox.Text = "select";
             outputComboBox.Text = "select";
+            
+            //get list of synapses and send them to addsynapsepanel
             List<JToken> synaps = bibCol.dynRoot["brain"]["Synapses"].ToList();
-            //List<Synaps> synaps = bibCol.Root.brain.Synapses;
             foreach (JToken synap in synaps)
             {
                 AddSynapsePanel(synap);
@@ -148,9 +155,13 @@ namespace Bibitinator
         
         private void AddSynapsePanel(JToken synap)
         {
+
             List<JToken> relatedNodes = new List<JToken>();
+            //add nodes that this synapse connects to to related nodes, this is passed into the panel tag
             relatedNodes.Add(bibCol.dynRoot["brain"]["Nodes"].Where(x => x.Value<int>("Index").Equals(synap.Value<int>("NodeIn"))).First());
             relatedNodes.Add(bibCol.dynRoot["brain"]["Nodes"].Where(x => x.Value<int>("Index").Equals(synap.Value<int>("NodeOut"))).First());
+            
+            //visual stuff
             FlowLayoutPanel p = new FlowLayoutPanel();
             p.Anchor = AnchorStyles.Top;
             TextBox cbIn = new TextBox();
@@ -160,16 +171,24 @@ namespace Bibitinator
             cbIn.ReadOnly = true;
             cbOut.ReadOnly = true;
             nud.ReadOnly = true;
+
+            //pass the node indexes into the delete button tag & set up button
             Tuple<int, int>  tup = Tuple.Create(synap.Value<int>("NodeOut"), synap.Value<int>("NodeIn"));
             del.Tag = tup;
             del.Text = "Remove";
             del.Click += synapseDelete;
+
+            //Input/Output text, use Desc for static nodes and Typename for Hidden nodes
             cbIn.Text = synap.Value<int>("NodeIn") < 43 ? relatedNodes[0].Value<String>("Desc") : relatedNodes[0].Value<String>("Desc") + " :" + relatedNodes[0].Value<String>("TypeName");
             cbIn.Tag = relatedNodes[0].Value<int>("Index");
             cbOut.Text = synap.Value<int>("NodeOut") < 43 ? relatedNodes[1].Value<String>("Desc") : relatedNodes[1].Value<String>("Desc") + " :" + relatedNodes[1].Value<String>("TypeName");
             cbOut.Tag = relatedNodes[1].Value<int>("Index");
+            
+            //updown value for weight and tag is if it's enabled
             nud.Text = synap.Value<string>("Weight");
             nud.Tag = synap.Value<bool>("en");
+
+            //more visual stuff
             p.Cursor = Cursors.Arrow;
             p.Controls.Add(cbIn);
             p.Controls.Add(cbOut);
@@ -190,10 +209,13 @@ namespace Bibitinator
             Tuple<int,int> tagTup =  (Tuple<int,int>)((Button)sender).Tag;
             try
             {
+                //get synapse
                 JToken syn = bibCol.dynRoot["brain"]["Synapses"].Where(x => x.Value<int>("NodeOut") == tagTup.Item1 && x.Value<int>("NodeIn") == tagTup.Item2).First();
-
-                //bibCol.Root.brain.Synapses.Remove(syn);
+               
+                //remove from model
                 bibCol.dynRoot["brain"]["Synapses"].Where(x => x.Equals(syn)).First().Remove();
+                
+                //removes synapse from nodes in model and from dropdown options
                 void removeFromNodesAndDropDown(JToken n)
                 {
                     if (n.Value<string>("Desc").Contains("Hidden"))
@@ -204,6 +226,7 @@ namespace Bibitinator
                     }
 
                 }
+                //if this synapse was the last one using a certain hidden node, delete that node
                 if (bibCol.dynRoot["brain"]["Synapses"].Where(x => x.Value<int>("NodeOut").Equals(syn.Value<int>("NodeIn")) || x.Value<int>("NodeIn").Equals(syn.Value<int>("NodeIn"))).Count() == 0) removeFromNodesAndDropDown(bibCol.dynRoot["brain"]["Nodes"].Where(x => x.Value<int>("Index").Equals(syn.Value<int>("NodeIn"))).First());
                 if (bibCol.dynRoot["brain"]["Synapses"].Where(x => x.Value<int>("NodeOut").Equals(syn.Value<int>("NodeOut")) || x.Value<int>("NodeIn").Equals(syn.Value<int>("NodeOut"))).Count() == 0) removeFromNodesAndDropDown(bibCol.dynRoot["brain"]["Nodes"].Where(x => x.Value<int>("Index").Equals(syn.Value<int>("NodeOut"))).First());
 
@@ -212,8 +235,6 @@ namespace Bibitinator
             {
                 MessageBox.Show(ex.Message);
             }
-            //if (bibCol.Root.brain.Synapses.Find(x => x.NodeOut == syn.NodeIn || x.NodeIn == syn.NodeIn) == null) removeFromNodesAndDropDown(bibCol.Root.brain.Nodes.Find(x => x.Index == syn.NodeIn));
-            //if (bibCol.Root.brain.Synapses.Find(x => x.NodeOut == syn.NodeOut || x.NodeIn == syn.NodeOut) == null) removeFromNodesAndDropDown(bibCol.Root.brain.Nodes.Find(x => x.Index == syn.NodeOut));
             //retrace
             Trace();
             //remove panel
@@ -226,7 +247,6 @@ namespace Bibitinator
             List<string> InputList = new List<string>();
             List<int> NoLoops = new List<int>();
             //start with exit neurons
-            //bibCol.Root.brain.Nodes.FindAll(x => x.TypeName != "Input" && !x.Desc.Contains("Hidden")).ForEach(TraceOutputNeurons);
             bibCol.dynRoot["brain"]["Nodes"].Where(x => x.Value<string>("TypeName") != "Input" && !x.Value<string>("Desc").Contains("Hidden")).ToList().ForEach(TraceOutputNeurons); ;
             //does tasks for before and after tracer
             void TraceOutputNeurons(JToken n)
@@ -425,7 +445,7 @@ namespace Bibitinator
         {
             bool hasNinout = bibCol.json.Contains("Nin");
             JArray synapses = new JArray();
-            NeuralNetEditorNodes nodes = new NeuralNetEditorNodes();
+            //NeuralNetEditorNodes nodes = new NeuralNetEditorNodes();
             
             List<JToken> nodesResult = new List<JToken>();
             //static nodes are the input and output neurons that are always present regardless of wether they have synapses going to them
