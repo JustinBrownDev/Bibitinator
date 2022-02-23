@@ -347,7 +347,7 @@ namespace Bibitinator
                 l.Text = setting.externalName;
                 l.Tag = setting.Category;
                 c.Tag = setting.internalName;
-                c.Name = setting.parent + setting.internalName;
+                c.Name = setting.internalName;
                 p.Tag = setting.internalLocation;
                 l.Anchor = AnchorStyles.Top;
                 
