@@ -250,26 +250,56 @@ namespace Bibitinator
             label.AutoSize = true;
             label.Parent = Favflow;
             Favflow.SetFlowBreak(label, true);
-
-            //create tabs for settings in knownSettings
-            foreach (settingsDictionary.setting setting in knownSettings)
+            List<settingControl> controls = new List<settingControl>();
+            foreach (JToken prop in props)
             {
-                //if property is the child of another, add a check for the parent to make sure it's the correct instance of that named property
-                JToken prop;
-                if (setting.internalLocation != "")
+                settingsDictionary.setting setting;
+                setting = knownSettings.Find(x => x.internalName == ((JProperty)prop).Name);
+                if (setting == null)
                 {
-                    prop = props.Find(x => ((JProperty)x).Name == setting.internalName && ((JProperty)x.Parent.Parent).Name == setting.internalLocation);
+                    setting = new settingsDictionary.setting();
+                    setting.parent = "Misc";
+                    setting.Category = "Misc";
+                    string intLoc;
+                    try
+                    {
+                        intLoc = ((JProperty)prop.Parent).Name;
+                    }
+                    catch 
+                    {
+                        intLoc = string.Empty;
+                    }
+                    setting.internalLocation = intLoc;
+
+                    setting.internalName = ((JProperty)prop).Name;
+                    //insert spaces
+                    string extName = setting.internalName;
+                    int helperInt = setting.internalName.Length - 1;
+                    for (int i = 0; i < helperInt; i++)
+                    {
+                        if (char.IsUpper(setting.internalName[i]))
+                        {
+                            extName.Insert(i, " ");
+                            i++;
+                            helperInt++;
+                        }
+                    }
+                    extName.Insert(0, char.ToUpper(extName[0]).ToString());
+                    extName.Remove(1, 1);
+                    setting.externalName = extName;
                 }
-                else
-                {
-                    prop = props.Find(x => ((JProperty)x).Name == setting.internalName);
-                }
-                //if this setting's parent 
-                if (!worldSettingTabControl.TabPages.ContainsKey(setting.Category))
+                settingControl con = new settingControl();
+                con.jprop = prop;
+                con.set = setting;
+                controls.Add(con);
+            }
+            foreach (settingControl con in controls.OrderByDescending(x => x.set.parent))
+            {
+                if (!worldSettingTabControl.TabPages.ContainsKey(con.set.Category))
                 {
                     TabPage tab = new TabPage();
-                    tab.Name = setting.Category;
-                    tab.Text = setting.Category;
+                    tab.Name = con.set.Category;
+                    tab.Text = con.set.Category;
                     FlowLayoutPanel flow = new FlowLayoutPanel();
                     flow.AutoScroll = true;
                     flow.Parent = tab;
@@ -280,15 +310,15 @@ namespace Bibitinator
                     worldSettingTabControl.TabPages.Add(tab);
                 }
                 //build the setting panel in its parent tab
-                buildBox(prop, setting, false);
+                buildBox(con.jprop, con.set, false);
                 //if its a favorite setting, put it in favorites too
-                if (setting.favorite)
+                if (con.set.favorite)
                 {
-                    buildBox(prop, setting, true);
+                    buildBox(con.jprop, con.set, true);
 
                 }
-                
             }
+
             void buildBox (JToken prop, settingsDictionary.setting setting, bool placeInFavs) 
             {
                 // if its a favorite, override flowindex with "Favorites" instead of the settings's category
@@ -303,7 +333,7 @@ namespace Bibitinator
                 }
                 //find the flow panel to be worked on
                 FlowLayoutPanel flow = (FlowLayoutPanel)worldSettingTabControl.TabPages[flowIndex].Controls.Find("Flow", false).First();
-                
+                int index;
                 //if the setting is the first with it's parent add a label header for it
                 if (!flow.Controls.ContainsKey(setting.parent))
                 {
@@ -318,7 +348,10 @@ namespace Bibitinator
                     flow.SetFlowBreak(label, true);
 
                 }
-
+                else
+                {
+                    index = flow.Controls.IndexOfKey(setting.parent);
+                }
                 string value = string.Empty;
                 if (!prop.Children().First().HasValues)
                 {
@@ -368,9 +401,10 @@ namespace Bibitinator
                 else
                 {
                     ((TextBox)p.Controls[1]).TextChanged += Bibitinator_FavChanged;
-                }
-                p.Parent = flow;
                 
+                }
+                
+                p.Parent = flow;                
                 //if this is the last property with that parent, add a line break
                 int setDexNext;
                 if (placeInFavs)
@@ -384,9 +418,8 @@ namespace Bibitinator
                     setDexNext = knownSettings.IndexOf(setting) + 1;
                     if (setDexNext < knownSettings.Count() && !knownSettings[setDexNext].parent.Equals(setting.parent)) flow.SetFlowBreak(p, true);
                 }
-                
             }
-        }
+         }
 
         private void setting_DoubleClick(object sender, EventArgs e)
         {
