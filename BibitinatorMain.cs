@@ -257,36 +257,45 @@ namespace Bibitinator
                 setting = knownSettings.Find(x => x.internalName == ((JProperty)prop).Name);
                 if (setting == null)
                 {
-                    setting = new settingsDictionary.setting();
-                    setting.parent = "Misc";
-                    setting.Category = "Misc";
-                    string intLoc;
-                    try
+                    List<settingsDictionary.setting> knownSetting = settingsDictionary.knownSettings.Where(n => n.internalName == ((JProperty)prop).Name).ToList();
+                    if (knownSetting.Count == 1)
                     {
-                        intLoc = ((JProperty)prop.Parent).Name;
+                        setting = knownSetting[0];
+                        addSettingToJson(setting);
                     }
-                    catch 
+                    else
                     {
-                        intLoc = string.Empty;
-                    }
-                    setting.internalLocation = intLoc;
-
-                    setting.internalName = ((JProperty)prop).Name;
-                    //insert spaces
-                    string extName = setting.internalName;
-                    int helperInt = setting.internalName.Length - 1;
-                    for (int i = 0; i < helperInt; i++)
-                    {
-                        if (char.IsUpper(setting.internalName[i]))
+                        setting = new settingsDictionary.setting();
+                        setting.parent = "Misc";
+                        setting.Category = "Misc";
+                        string intLoc;
+                        try
                         {
-                            extName.Insert(i, " ");
-                            i++;
-                            helperInt++;
+                            intLoc = ((JProperty)prop.Parent).Name;
                         }
-                    }
-                    extName.Insert(0, char.ToUpper(extName[0]).ToString());
-                    extName.Remove(1, 1);
-                    setting.externalName = extName;
+                        catch
+                        {
+                            intLoc = string.Empty;
+                        }
+                        setting.internalLocation = intLoc;
+
+                        setting.internalName = ((JProperty)prop).Name;
+                        //insert spaces
+                        string extName = setting.internalName;
+                        int helperInt = setting.internalName.Length - 1;
+                        for (int i = 0; i < helperInt; i++)
+                        {
+                            if (char.IsUpper(extName[i]))
+                            {
+                                extName = extName.Insert(i, " ");
+                                i++;
+                                helperInt++;
+                            }
+                        }
+                        extName = extName.Insert(0, char.ToUpper(extName[0]).ToString());
+                        extName = extName.Remove(1, 1);
+                        setting.externalName = extName;
+                    }                
                 }
                 settingControl con = new settingControl();
                 con.jprop = prop;
@@ -420,7 +429,22 @@ namespace Bibitinator
                 }
             }
          }
+        private void addSettingToJson(settingsDictionary.setting set)
+        {
+            JObject jOb;
+            using (StreamReader r = new StreamReader(Directory.GetCurrentDirectory() + "\\SettingsData.json"))
+            {
+                var json = r.ReadToEnd();
 
+                jOb = (JObject)JsonConvert.DeserializeObject(json);
+
+            }
+            JArray jAr = jOb.Value<JArray>("knownSettings");
+            jAr.Add(JObject.FromObject(set));
+            jOb["knownSettings"].Replace(jAr);
+            File.WriteAllText(Directory.GetCurrentDirectory() + "\\SettingsData.json", jOb.ToString());
+
+        }
         private void setting_DoubleClick(object sender, EventArgs e)
         {
             //all of this to get the setting info for the clicked setting, needs to be improved
