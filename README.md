@@ -2,6 +2,7 @@ Reddit post with relevent links: https://www.reddit.com/r/TheBibites/comments/ug
 Download compiled program: https://drive.google.com/file/d/1qEVMuttBSJbB0fDtXi09xOSAlZv-5g8U/view?usp=sharing
 
 usage
+
 Edit world files:
 1) upload the world .zip using the upload world file button
 2) click the world settings tab and edit the values
