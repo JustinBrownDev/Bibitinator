@@ -11,8 +11,11 @@ Edit world files:
 Edit bibites:
 
 1a) upload a world .zip and double click a bibite in the listview to the right
+
 or
+
 1b) upload a bibite directly
+
 2) a bibite editor window will open where you'll see a tree view that maps each output neuron to the input neurons that affect it
 3) a list of synapses will be on the right hand side of the tree view where you can add/remove synapses. Tip: click a node in the tree view to highlight the synapse for that connection in the righthand panel
 4) use the genes tab to change the values of genes
