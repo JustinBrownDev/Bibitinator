@@ -7,7 +7,9 @@ Edit world files:
 1) upload the world .zip using the upload world file button
 2) click the world settings tab and edit the values
 3) go back to the file tab and click export
+
 Edit bibites:
+
 1a) upload a world .zip and double click a bibite in the listview to the right
 or
 1b) upload a bibite directly
