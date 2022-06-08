@@ -103,15 +103,15 @@ namespace Bibitinator.Models
             new setting { internalName = "massDensity", externalName = "Mass Density", Category = "Energy", internalLocation = "PlantSettings", parent = "Plants"},
             new setting { internalName = "hardness", externalName = "Hardness", Category = "Energy", internalLocation = "PlantSettings", parent = "Plants"},
             new setting { internalName = "digestionRate", externalName = "Base Reactivity", Category = "Energy", internalLocation = "PlantSettings", parent = "Plants"},
-            new setting { internalName = "maxEfficiency", externalName = "Max Conversion Efficiency", Category = "Energy", internalLocation = "PlantSettings", parent = "Plants"},
             new setting { internalName = "minEfficiency", externalName = "Min Conversion Efficiency", Category = "Energy", internalLocation = "PlantSettings", parent = "Plants"},
+            new setting { internalName = "maxEfficiency", externalName = "Max Conversion Efficiency", Category = "Energy", internalLocation = "PlantSettings", parent = "Plants"},
             //ENERGY SETTINGS - meat
             new setting { internalName = "energyDensity", externalName = "Energy Density", Category = "Energy", internalLocation = "MeatSettings", parent = "Meat"},
             new setting { internalName = "massDensity", externalName = "Mass Density", Category = "Energy", internalLocation = "MeatSettings", parent = "Meat"},
             new setting { internalName = "hardness", externalName = "Hardness", Category = "Energy", internalLocation = "MeatSettings", parent = "Meat"},
             new setting { internalName = "digestionRate", externalName = "Base Reactivity", Category = "Energy", internalLocation = "MeatSettings", parent = "Meat"},
-            new setting { internalName = "maxEfficiency", externalName = "Max Conversion Efficiency", Category = "Energy", internalLocation = "MeatSettings", parent = "Meat"},
             new setting { internalName = "minEfficiency", externalName = "Min Conversion Efficiency", Category = "Energy", internalLocation = "MeatSettings", parent = "Meat"},
+            new setting { internalName = "maxEfficiency", externalName = "Max Conversion Efficiency", Category = "Energy", internalLocation = "MeatSettings", parent = "Meat"},            
             //ENERGY SETTINGS - meat balance
             new setting { internalName = "baseBodyEnergyRatio", externalName = "Base Body Points Cost", Category = "Energy", parent = "Meat Balance", internalLocation = string.Empty},
             new setting { internalName = "healthBodyRatio", externalName = "Health to Body Constant", Category = "Energy", parent = "Meat Balance", internalLocation = string.Empty},

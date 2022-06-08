@@ -69,7 +69,7 @@
             this.AnalyzeButton.TabIndex = 7;
             this.AnalyzeButton.Text = "Analyze";
             this.AnalyzeButton.UseVisualStyleBackColor = true;
-            this.AnalyzeButton.Click += new System.EventHandler(this.Analyze);
+            this.AnalyzeButton.Click += new System.EventHandler(this.Open_Bibite);
             // 
             // worldBrowseButton
             // 
@@ -79,7 +79,7 @@
             this.worldBrowseButton.TabIndex = 6;
             this.worldBrowseButton.Text = "browse";
             this.worldBrowseButton.UseVisualStyleBackColor = true;
-            this.worldBrowseButton.Click += new System.EventHandler(this.browseButton_Click);
+            this.worldBrowseButton.Click += new System.EventHandler(this.worldBrowseButton_Click);
             // 
             // worldFilePathTextBox
             // 
@@ -213,7 +213,7 @@
             this.bibiteListView.TabIndex = 8;
             this.bibiteListView.UseCompatibleStateImageBehavior = false;
             this.bibiteListView.View = System.Windows.Forms.View.List;
-            this.bibiteListView.DoubleClick += new System.EventHandler(this.Analyze);
+            this.bibiteListView.DoubleClick += new System.EventHandler(this.Open_Bibite);
             // 
             // tabPage5
             // 

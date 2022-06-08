@@ -22,60 +22,51 @@ namespace Bibitinator
             InitializeComponent();
             tabControl1.SelectedTab = tabPage0;
         }
-        //Used to hold the first reading of the worldsettings Json file, when the world settings
-        //reset button is clicked worldsettingsJson is set to equal OgWorldsettingJson
-        public string OgWorldsettingJson = string.Empty;
-        public string worldsettingsJson = string.Empty;
-        //extension variables used to accept both .bb8 & .json files
-        public string bibiteExtension = string.Empty;
-        public string settingsExtension = string.Empty;
-        public string sceneExtension = string.Empty;
-        //Directory path where world files are extracted to and operated on before exporting
-        public string extractTo;
-        private void browseButton_Click(object sender, EventArgs e)
+
+        public string OgWorldsettingJson = string.Empty;    //---------------- Holds the original settings json when the file is loaded, used for the reset button
+        public string worldsettingsJson = string.Empty;     //---------------- Holds the settings json that is edited and eventually saved to the new world zip
+        public string bibiteExtension = string.Empty;       //---------------- .bb8 or .json, depending on version
+        public string settingsExtension = string.Empty;     //---------------- .bb8settings or .json, depending on version
+        public string sceneExtension = string.Empty;  //---------------------- .bb8scene or .json, depending on version        
+        public string extractTo;    //---------------------------------------- Directory where files are unzipped and acted on
+
+        private void worldBrowseButton_Click(object sender, EventArgs e)
         {
-            //for some reason this wont stick in the designer, needs to be set programmatically
-            splitContainer1.Cursor = Cursors.Arrow;
-            
-            bibiteListView.Items.Clear();
-
-            string userFilepath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\AppData\\LocalLow\\The Bibites\\The Bibites";
+            splitContainer1.Cursor = Cursors.Arrow; //------------------------ Don't know why this won't stick in the editor, needs to be set here
+            bibiteListView.Items.Clear();   //-------------------------------- Clear the bibite listview before populating it with new bibites
+                                                                            // V get user-specific directory locations
+            string bibitesFilePath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\AppData\\LocalLow\\The Bibites\\The Bibites";
             string tempFilePath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\bibitinator";
-
-            if (Directory.Exists(userFilepath)) openWorldZipDialog.InitialDirectory = userFilepath;
+                                                                            // V jump straight to the bibites directory if it's there
+            if (Directory.Exists(bibitesFilePath)) openWorldZipDialog.InitialDirectory = bibitesFilePath;
             openWorldZipDialog.ShowDialog();
-            worldFilePathTextBox.Text = openWorldZipDialog.FileName;
+            worldFilePathTextBox.Text = openWorldZipDialog.FileName; //------- Display filename when file is selected
+
             //if the file path has been set and the file is a zip archive, continue with extraction and setup
             if (worldFilePathTextBox.Text != null && File.Exists(openWorldZipDialog.FileName) && openWorldZipDialog.FileName.EndsWith(".zip"))
             {
-                //extract the zip file
-                Cursor.Current = Cursors.WaitCursor;
+                Cursor.Current = Cursors.WaitCursor; //----------------------- V everything after the last slash is the filename, extractto [tempFilePath]\[filename]\
                 int lastSlashIndex = openWorldZipDialog.FileName.LastIndexOf('\\');
-                //extract to directory with the name of the world
                 extractTo = tempFilePath + openWorldZipDialog.FileName.Substring(lastSlashIndex, openWorldZipDialog.FileName.LastIndexOf('.') - lastSlashIndex);
-                if (Directory.Exists(extractTo))
-                {
-                    Directory.Delete(extractTo, true);
-                }
-                ZipFile.ExtractToDirectory(openWorldZipDialog.FileName, extractTo);
-                //set the extension variables
-                if (File.Exists(extractTo + "\\settings.json"))
+                if (Directory.Exists(extractTo)) Directory.Delete(extractTo, true);//Make sure we start with a fresh folder
+                ZipFile.ExtractToDirectory(openWorldZipDialog.FileName, extractTo);//And extract to that folder
+                if (File.Exists(extractTo + "\\settings.json")) //------------ Older versions use the .json extension
                 {
                     bibiteExtension = ".json";
                     settingsExtension = ".json";
                     sceneExtension = ".json";
                 }
-                else if (File.Exists(extractTo + "\\settings.bb8settings"))
+                else if (File.Exists(extractTo + "\\settings.bb8settings")) // Newer versions use these
                 {
                     bibiteExtension = ".bb8";
                     settingsExtension = ".bb8settings";
                     sceneExtension = ".bb8scene";
                 }
-                else
+                else //------------------------------------------------------- Something went wrong if neither is present
                 {
                     worldFilePathTextBox.Text = "error";
                 }
-                //populate bibites listview
+                                                                        //---- V For each bibite in the world zip add it's filename to BibiteListView
                 string[] bibiteList = Directory.GetFiles(extractTo + "\\bibites");
                 foreach (string fileName in bibiteList)
                 {
@@ -83,16 +74,13 @@ namespace Bibitinator
                     bibiteListView.Items.Add(bibiteName);
                 }
                 bibiteListView.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
-                //get world settings, populate world settings panel
                 using (StreamReader r = new StreamReader(extractTo + "\\settings" + settingsExtension))
-                {
+                {       //---------------------------------------------------- ^V read settings json
                     var json = r.ReadToEnd();
-                    //this is the json string being acted on
-                    worldsettingsJson = json.ToString();
-                    //this holds the initial json string used when the user clicks the reset button
+                    worldsettingsJson = json.ToString(); //------------------- < V Assign it's content to worldsettingsJson & OgWorldsettingJson 
                     OgWorldsettingJson = json.ToString();
                 }
-                populateSettings();
+                populateSettings();  //--------------------------------------- Calls func to create settings editor
             }
             else
             {
@@ -100,48 +88,42 @@ namespace Bibitinator
             }
             
         }
-        private void Analyze(object sender, EventArgs e)
+        private void Open_Bibite(object sender, EventArgs e)
         {
             if(bibiteListView.SelectedIndices.Count > 0)
             {
-                //initialize bibite collection to pass to editor
-                BibiteCollection col = new BibiteCollection();
-                col.name = bibiteListView.SelectedItems[0].Text ;
-                col.extractFolder = extractTo + "\\bibites\\";
-                string filePath = extractTo + "\\bibites\\" + col.name;
-                string result = string.Empty;
-                JObject jobj;
-                //get bibite json file
+                BibiteCollection col = new BibiteCollection(); //------------- Inst. BibCol class which is passed to bibiteEditor
+                col.name = bibiteListView.SelectedItems[0].Text ; //---------- Bibite file name
+                col.saveTo = extractTo + "\\bibites\\"; //-------------------- Folder to save to in bibite editor = world file temp directory 
+                string filePath = extractTo + "\\bibites\\" + col.name; //---- Creates filepath of this bibite
+                string result = string.Empty;       //------------------------ Will contain json file text
+                JObject jobj;   //-------------------------------------------- Used to save result string with indented formatting
                 try
                 {
                     using (StreamReader r = new StreamReader(filePath))
-                    {
+                    {                                                       // ^ V read json file, convert to jobj and back to ensure correct formatting
                         var json = r.ReadToEnd();
                         jobj = JObject.Parse(json);
                         result = jobj.ToString(Newtonsoft.Json.Formatting.Indented);
                     }
-                    col.json = result;
+                    col.json = result; //------------------------------------- Assign string to BibCol
                 }
                 catch
                 {
 
                 }
                 BibiteEditor editorWindow = new BibiteEditor(col);
-                editorWindow.Show();
+                editorWindow.Show(); //--------------------------------------- Start editor Window for selected bibite
             }
         }
 
         private void worldSettingsSaveButton_Click(object sender, EventArgs e)
         {
-            //get json file with setting values replaced with those in the editor
-            string json = replaceValuesInSettings(worldsettingsJson);
-            if (json == "") return; //if they click save without uploading a file, do nothing
-
-            //overwrite settings file
-            File.WriteAllText(extractTo + "\\settings" + settingsExtension, json);
-
-            //if the settings file exists, saved successful
-            if (File.Exists(extractTo + "\\settings" + settingsExtension))
+            string json = replaceValuesInSettings(worldsettingsJson); //------ Get json text containing any edits made by the user
+            if (json == "") return; //---------------------------------------- if they click save without uploading a file, do nothing  
+                                                                            // V overwrite settings file
+            File.WriteAllText(extractTo + "\\settings" + settingsExtension, json);           
+            if (File.Exists(extractTo + "\\settings" + settingsExtension)) //- if the settings file exists, saved successful
             {
                 MessageBox.Show("Saved Succesfully");
             }
@@ -153,46 +135,37 @@ namespace Bibitinator
 
         private void exportButton_Click(object sender, EventArgs e)
         {
-            //if they click export without uploading a world, do nothing
-            if(bibiteListView.Items.Count > 0)
+            if(bibiteListView.Items.Count > 0) //----------------------------- if they click export without uploading a world, do nothing
             {
-                //get name of the world file
+                                                                            // V get name of the world file
                 int lastSlashIndex = openWorldZipDialog.FileName.LastIndexOf('\\');
                 string zipName = openWorldZipDialog.FileName.Substring(lastSlashIndex);
-                //get path to the bibitinator folder in the bibites game files
-                //if it doesnt exist already, create it
-                string targetFileName = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) +
-                "\\AppData\\LocalLow\\The Bibites\\The Bibites\\Bibitinator\\";
-                if (!Directory.Exists(targetFileName))
+                                                                           //- V get path to the bibitinator folder in the bibites game files
+                string targetFileName = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\AppData\\LocalLow\\The Bibites\\The Bibites\\Bibitinator\\";
+                if (!Directory.Exists(targetFileName)) //--------------------- if it doesnt exist already, create it
                 {
                     Directory.CreateDirectory(targetFileName);
                 }
-                //allow the user to select a different directory if preferred
+                                                                           //- V allow the user to select a different directory if preferred
                 FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog();
                 folderBrowserDialog.SelectedPath = targetFileName;
                 folderBrowserDialog.ShowDialog();
-                //zipping function
-                zipInOrder(folderBrowserDialog.SelectedPath, zipName);
+                
+                zipInOrder(folderBrowserDialog.SelectedPath, zipName);//------ zipping function
             }       
         }
         private void populateSettings()
         {
-            //if no file uploaded, do nothing, otherwise, clear any tab pages and build new ones
-            if (worldsettingsJson == "") return;
-            worldSettingTabControl.TabPages.Clear();
-
-            //this exists to put settings in the correct tab, apply headers, and specify parent properties for
-            //Plant & Meat settings values
-            settingsDictionary settingsDictionary = new settingsDictionary();
-            
-            //create model for world settings, use invariant culuture
-            JsonSerializerSettings jss = new JsonSerializerSettings();
-            jss.Culture = CultureInfo.InvariantCulture;
+           
+            if (worldsettingsJson == "") return; //--------------------------- if no file uploaded, do nothing
+            worldSettingTabControl.TabPages.Clear(); //----------------------- Clear tabs
+            settingsDictionary settingsDictionary = new settingsDictionary();//Get settingsDictionary class, used to format settings nicely
+            JsonSerializerSettings jss = new JsonSerializerSettings(); //get serialization settings
+            jss.Culture = CultureInfo.InvariantCulture; //-------------- use invariant culuture & V deserialize
             JObject obj = (JObject)JsonConvert.DeserializeObject(worldsettingsJson, jss);
             
-            //foreach surface level property in worldsettings 
-            List<JToken> props = new List<JToken>();
-            foreach (JToken prop in obj.Children())
+            List<JToken> props = new List<JToken>(); //----------------- List of tokens in jobj
+            foreach (JToken prop in obj.Children()) //------------------ Run settingsDigger for each child
             {
                 settingsDigger(prop);
             }
@@ -205,12 +178,10 @@ namespace Bibitinator
             { 
                 if(prop.Values().ToList().Count() > 1)
                 {
-
                     foreach (JToken subprop in prop.Children())
                     { 
                         settingsDigger(subprop);
-                    }
-                    
+                    }   
                 }
                 else
                 {
@@ -220,21 +191,18 @@ namespace Bibitinator
             //if UsersSettingsData doesnt exist create a copy of SettingsData (the default user settings data) with that name.
             //Deleting UsersSettingsData will reset favorites to default.
             if (!File.Exists(Directory.GetCurrentDirectory() + "\\UserSettingsData.json")) File.Copy(Directory.GetCurrentDirectory() + "\\SettingsData.json", Directory.GetCurrentDirectory() + "\\UserSettingsData.json");
-            
-            //Convert Json file to list of settings
-            JObject jOb;
+            JObject jOb; //--------------------------------------------------- Convert Json file to list of settings
             using (StreamReader r = new StreamReader(Directory.GetCurrentDirectory() + "\\UserSettingsData.json"))
             {
-                var json = r.ReadToEnd();
-                
+                var json = r.ReadToEnd();               
                 jOb = (JObject)JsonConvert.DeserializeObject(json);
                 
             }
             JArray jAr = jOb.Value<JArray>("knownSettings");
             List<settingsDictionary.setting> knownSettings = jAr.ToObject<settingsDictionary.setting[]>().ToList();
             
-            //create favorites Tab
-            TabPage favTab = new TabPage();
+            
+            TabPage favTab = new TabPage(); //-------------------------------- create favorites Tab
             favTab.Name = "Favorites";
             favTab.Text = "Favorites";
             FlowLayoutPanel Favflow = new FlowLayoutPanel();
@@ -250,11 +218,17 @@ namespace Bibitinator
             label.AutoSize = true;
             label.Parent = Favflow;
             Favflow.SetFlowBreak(label, true);
-            List<settingControl> controls = new List<settingControl>();
-            foreach (JToken prop in props)
+            List<settingControl> controls = new List<settingControl>(); //---- List of Jtoken/SettingDictionary.setting pairs
+
+            foreach (JToken prop in props) //--------------------------------- Iterate through Jtokens in props list & populate controls List
             {
                 settingsDictionary.setting setting;
+                                                                           //- V Find the setting with the same name
                 setting = knownSettings.Find(x => x.internalName == ((JProperty)prop).Name);
+                if (setting.internalLocation != String.Empty)
+                {                                          //----------------- ^ if the setting is a property of an obj, make sure the targeted setting has the correct parent obj
+                    setting = setting = knownSettings.Find(x => x.internalName == ((JProperty)prop).Name && ((JProperty)prop.Parent.Parent).Name == x.internalLocation);
+                }
                 if (setting == null)
                 {
                     List<settingsDictionary.setting> knownSetting = settingsDictionary.knownSettings.Where(n => n.internalName == ((JProperty)prop).Name).ToList();
@@ -302,7 +276,7 @@ namespace Bibitinator
                 con.set = setting;
                 controls.Add(con);
             }
-            foreach (settingControl con in controls.OrderByDescending(x => x.set.parent))
+            foreach (settingControl con in controls)
             {
                 if (!worldSettingTabControl.TabPages.ContainsKey(con.set.Category))
                 {
@@ -319,16 +293,15 @@ namespace Bibitinator
                     worldSettingTabControl.TabPages.Add(tab);
                 }
                 //build the setting panel in its parent tab
-                buildBox(con.jprop, con.set, false);
+                buildWorldSettingPanel(con.jprop, con.set, false);
                 //if its a favorite setting, put it in favorites too
                 if (con.set.favorite)
                 {
-                    buildBox(con.jprop, con.set, true);
-
+                    buildWorldSettingPanel(con.jprop, con.set, true);
                 }
             }
 
-            void buildBox (JToken prop, settingsDictionary.setting setting, bool placeInFavs) 
+            void buildWorldSettingPanel (JToken prop, settingsDictionary.setting setting, bool placeInFavs) 
             {
                 // if its a favorite, override flowindex with "Favorites" instead of the settings's category
                 int flowIndex;
@@ -344,7 +317,8 @@ namespace Bibitinator
                 FlowLayoutPanel flow = (FlowLayoutPanel)worldSettingTabControl.TabPages[flowIndex].Controls.Find("Flow", false).First();
                 int index;
                 //if the setting is the first with it's parent add a label header for it
-                if (!flow.Controls.ContainsKey(setting.parent))
+                bool firstOfType = !flow.Controls.ContainsKey(setting.parent);
+                if (firstOfType)
                 {
                     Label label = new Label();
                     label.Text = setting.parent;
@@ -413,22 +387,24 @@ namespace Bibitinator
                 
                 }
                 
-                p.Parent = flow;                
+                p.Parent = flow;
+
                 //if this is the last property with that parent, add a line break
                 int setDexNext;
+                List<settingsDictionary.setting> conList = controls.Select(x => x.set).ToList();
                 if (placeInFavs)
                 {
-                    List<settingsDictionary.setting> favorites = knownSettings.Where(x => x.favorite).ToList();
+                    List<settingsDictionary.setting> favorites = conList.Where(x => x.favorite).ToList();
                     setDexNext = favorites.IndexOf(setting) + 1;
                     if (setDexNext < favorites.Count() && !favorites[setDexNext].parent.Equals(setting.parent)) flow.SetFlowBreak(p, true);
                 }
                 else
                 {
-                    setDexNext = knownSettings.IndexOf(setting) + 1;
-                    if (setDexNext < knownSettings.Count() && !knownSettings[setDexNext].parent.Equals(setting.parent)) flow.SetFlowBreak(p, true);
+                    setDexNext = conList.IndexOf(setting) + 1;
+                    if (setDexNext < conList.Count() && !conList[setDexNext].parent.Equals(setting.parent)) flow.SetFlowBreak(p, true);
                 }
             }
-         }
+        }
         private void addSettingToJson(settingsDictionary.setting set)
         {
             JObject jOb;
@@ -678,7 +654,7 @@ namespace Bibitinator
         {
             
             bibiteListView.Items.Clear();
-            string userFilepath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\Documents";
+            string userFilepath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\Desktop";
             OpenFileDialog fileDialog = new OpenFileDialog();
             if (Directory.Exists(userFilepath)) fileDialog.InitialDirectory = userFilepath;
             fileDialog.ShowDialog();
@@ -711,7 +687,7 @@ namespace Bibitinator
                     col.json = result;
                     int nameStart = fileDialog.FileName.LastIndexOf("\\") + 1;
                     col.name = fileDialog.FileName.Substring(nameStart);
-                    col.extractFolder = fileDialog.FileName.Substring(0, fileDialog.FileName.Length - col.name.Length);
+                    col.saveTo = fileDialog.FileName.Substring(0, fileDialog.FileName.Length - col.name.Length);
                     BibiteEditor editorWindow = new BibiteEditor(col);
                     editorWindow.Show();
                 }
