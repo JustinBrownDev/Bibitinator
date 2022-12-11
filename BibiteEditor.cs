@@ -519,7 +519,7 @@ namespace Bibitinator
             if (AddNeuronComboBox.SelectedIndex > -1)
             {
                 JToken n = bibCol.dynRoot["brain"]["Nodes"].FirstOrDefault().DeepClone();
-                n["Type"] = AddNeuronComboBox.SelectedIndex - 1;
+                n["Type"] = AddNeuronComboBox.SelectedIndex + 1;
                 n["TypeName"] = AddNeuronComboBox.SelectedItem.ToString();
                 n["Index"] = bibCol.dynRoot["brain"]["Nodes"].Children().Count();
                 while (bibCol.dynRoot["brain"]["Nodes"].Where(x => x.Value<int>("Index").Equals(n.Value<int>("Index"))).Count() > 0) n["Index"] = n.Value<int>("Index") + 1;
