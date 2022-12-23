@@ -43,6 +43,7 @@ namespace Bibitinator
                                                                              // V deserialize json string to JObject
             bibCol.dynRoot = (JObject)JsonConvert.DeserializeObject(bibCol.json, new JsonSerializerSettings() { Culture = CultureInfo.InvariantCulture });
             buildGenesEditor();                                   //------------- start function to setup genes editor
+            buildBrainEditor();
             BrainTrace();                                            //------------- start function to trace inputs and outputs
             splitContainer1.Cursor = Cursors.Arrow;    //---------------------- for some reason this wont stay in the designer, needs to be set programattically
             this.Text = bibCol.name;                   //---------------------- set window text to bibite name
@@ -270,6 +271,9 @@ namespace Bibitinator
                 t.Dock = DockStyle.Right;
                 p.Parent = editorflow;
             }
+        }
+        public void buildBrainEditor()
+        {
             List<JToken> nodes = bibCol.dynRoot["brain"]["Nodes"].ToList();//- Get list of Neurons
             foreach (string node in middleNodeNames)
             {                              //--------------------------------- Add middle nodes to the middle node dropdown
@@ -470,9 +474,6 @@ namespace Bibitinator
         private void GenesResetButton_Click(object sender, EventArgs e) //RESETS GENES 
         {
             editorflow.Controls.Clear();
-            inputComboBox.Items.Clear();
-            outputComboBox.Items.Clear();
-            AddNeuronComboBox.Items.Clear();
             buildGenesEditor();
         }
         private void ConnectionsTreeView_AfterSelect(object sender, TreeViewEventArgs e) //HIGHLIGHTS SYNAPSE WHEN SELECTED IN BRAIN TREE
