@@ -18,7 +18,9 @@ namespace Bibitinator
 {
     public partial class BibiteEditor : Form
     {
-        BibiteCollection bibCol = null;         //----------------------------- < Declare Bibite Collection & V List of middle neuron names
+        BibiteCollection bibCol = null;
+        JObject dynRootOriginal = null;
+        //----------------------------- < Declare Bibite Collection & V List of middle neuron names
         public List<string> middleNodeNames = new List<string> {"Sigmoid", "Linear", "TanH", "Sin", "ReLu", "Gaussian", "Latch", "Differential", "Abs", "Mult" };
         public BibiteEditor(BibiteCollection col)
         {
@@ -41,6 +43,7 @@ namespace Bibitinator
             }
                                               // V deserialize json string to JObject
             bibCol.dynRoot = (JObject)JsonConvert.DeserializeObject(bibCol.json, new JsonSerializerSettings() { Culture = CultureInfo.InvariantCulture });
+            dynRootOriginal = (JObject)bibCol.dynRoot.DeepClone();
             buildGenesEditor();                                   //------------- start function to setup genes editor
             BrainTrace();                                            //------------- start function to trace inputs and outputs
             splitContainer1.Cursor = Cursors.Arrow;    //---------------------- for some reason this wont stay in the designer, needs to be set programattically
@@ -532,6 +535,14 @@ namespace Bibitinator
         }
         private void BrainResetButton_Click(object sender, EventArgs e)
         {
+            bibCol.dynRoot["brain"] = dynRootOriginal["brain"].DeepClone();
+            BrainTrace();
+            BrainEditorPanel.Controls.Clear();
+            List<JToken> synaps = bibCol.dynRoot["brain"]["Synapses"].ToList();
+            foreach (JToken synap in synaps)
+            {
+                AddSynapsePanel(synap);
+            }
 
         }
         private void BrainSaveButton_Click(object sender, EventArgs e)
