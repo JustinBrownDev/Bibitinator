@@ -19,7 +19,7 @@ namespace Bibitinator
     public partial class BibiteEditor : Form
     {
         BibiteCollection bibCol = null;         //----------------------------- < Declare Bibite Collection & V List of middle neuron names
-        public List<string> middleNodeNames = new List<string> { "Sigmoid", "Linear", "TanH", "Sine", "ReLu", "Gaussian", "Latch", "Differential" };
+        public List<string> middleNodeNames = new List<string> {"Sigmoid", "Linear", "TanH", "Sin", "ReLu", "Gaussian", "Latch", "Differential", "Abs", "Mult" };
         public BibiteEditor(BibiteCollection col)
         {
             InitializeComponent();
@@ -39,8 +39,7 @@ namespace Bibitinator
                 string desc = node.Nodes[6 - x].Nodes[0].Text + " (" + node.Nodes[1].Nodes[0].Text + ")";
                 node.Text = desc;
             }
-
-                                                                             // V deserialize json string to JObject
+                                              // V deserialize json string to JObject
             bibCol.dynRoot = (JObject)JsonConvert.DeserializeObject(bibCol.json, new JsonSerializerSettings() { Culture = CultureInfo.InvariantCulture });
             buildGenesEditor();                                   //------------- start function to setup genes editor
             BrainTrace();                                            //------------- start function to trace inputs and outputs
@@ -510,7 +509,7 @@ namespace Bibitinator
                 s["Inov"] = 0;                                             //- IDK what Inov does
                 bibCol.dynRoot["brain"]["Synapses"].Last().AddAfterSelf(s);//- Add to dynroot
                 AddSynapsePanel(s);                                        //- Add to editor
-                BrainTrace();                                                   //- refresh brain tree
+                BrainTrace();                                              //- refresh brain tree
             }
                 
         }
@@ -519,7 +518,7 @@ namespace Bibitinator
             if (AddNeuronComboBox.SelectedIndex > -1)
             {
                 JToken n = bibCol.dynRoot["brain"]["Nodes"].FirstOrDefault().DeepClone();
-                n["Type"] = AddNeuronComboBox.SelectedIndex - 1;
+                n["Type"] = AddNeuronComboBox.SelectedIndex + 1;
                 n["TypeName"] = AddNeuronComboBox.SelectedItem.ToString();
                 n["Index"] = bibCol.dynRoot["brain"]["Nodes"].Children().Count();
                 while (bibCol.dynRoot["brain"]["Nodes"].Where(x => x.Value<int>("Index").Equals(n.Value<int>("Index"))).Count() > 0) n["Index"] = n.Value<int>("Index") + 1;

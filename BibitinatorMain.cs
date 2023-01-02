@@ -132,7 +132,6 @@ namespace Bibitinator
                 MessageBox.Show("Save Failed");
             }
         }
-
         private void exportButton_Click(object sender, EventArgs e)
         {
             if(bibiteListView.Items.Count > 0) //----------------------------- if they click export without uploading a world, do nothing
@@ -271,6 +270,10 @@ namespace Bibitinator
                         setting.externalName = extName;
                     }                
                 }
+                //else if (setting.internalLocation != String.Empty)
+                //{                                          //----------------- ^ if the setting is a property of an obj, make sure the targeted setting has the correct parent obj
+                //    setting = setting = knownSettings.Find(x => x.internalName == ((JProperty)prop).Name && ((JProperty)prop.Parent.Parent).Name == x.internalLocation);
+                //}
                 settingControl con = new settingControl();
                 con.jprop = prop;
                 con.set = setting;
